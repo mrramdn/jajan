@@ -146,6 +146,16 @@ components:
     rounded: "{rounded.lg}"
     height: 52px
     padding: 0 24px
+  button-destructive:
+    backgroundColor: "{colors.destructive}"
+    textColor: "{colors.destructive-foreground}"
+    borderColor: "{colors.destructive-edge}"
+    borderWidth: 2px
+    shadow: "0 4px 0 0 {colors.destructive-edge}"
+    typography: "{typography.button}"
+    rounded: "{rounded.lg}"
+    height: 52px
+    padding: 0 24px
   button-ghost:
     textColor: "{colors.foreground}"
     typography: "{typography.button}"
@@ -344,10 +354,10 @@ Measured contrast (WCAG 2.x ratios), light then dark:
 - `primary-foreground` on `primary` 4.6 in both modes; on `primary-hover` 5.5 in both.
 - `secondary-foreground` on `secondary` 6.0 and 7.1; on `card` 7.6 and 8.6; on `background` 6.6 and 9.9.
 - `muted-foreground` on `background` 5.4 and 8.5; on `card` 6.2 and 7.4; on `muted` 4.9 and 5.9; on `secondary` 4.9 and 6.2.
-- `destructive-foreground` on `destructive` 5.2 and 4.7. Text on the snack fills: `pandan` 4.9 and 7.3, `martabak` 7.7 and 9.8, `gula` 6.1 and 5.2, `cendol` 8.3 and 9.6.
+- `destructive-foreground` on `destructive` 5.2 and 4.7; `destructive` as text on `card` 5.2 and 3.1. Text on the snack fills: `pandan` 4.9 and 7.3, `martabak` 7.7 and 9.8, `gula` 6.1 and 5.2, `cendol` 8.3 and 9.6.
 - Control boundaries (3:1 needed): `input` on `card` 3.9 and 3.3, on `background` 3.4 and 3.8; `primary` (the on state of a toggle) on `card` 4.6 and 3.2, on `background` 4.0 and 3.7; `ring` on `card` 4.6 and 4.8.
 
-Every text pair above passes WCAG AA, and every control boundary passes 3:1. Two things fall short on purpose and have a rule: `primary` as text is 3.2:1 on the dark `card`, so text-only actions use `secondary-foreground` (7.6 and 8.6); and `border` is decorative (1.4:1 on white), so a card's outline is never the only thing that separates two states.
+Every text pair above passes WCAG AA, and every control boundary passes 3:1. Three things fall short on purpose and have a rule: `primary` as text is 3.2:1 on the dark `card`, so text-only actions use `secondary-foreground` (7.6 and 8.6); `destructive` as text is 3.1:1 on the dark `card`, so an error message is set in `foreground` with a `destructive` icon (the icon and the field's red border pass 3:1); and `border` is decorative (1.4:1 on white), so a card's outline is never the only thing that separates two states.
 
 ## Typography
 
@@ -372,7 +382,7 @@ Rules:
 
 - Use the `type-*` utilities instead of composing size, weight and tracking by hand. They are not named `text-*` so that `tailwind-merge` does not confuse them with text colors.
 - Interface text is `type-ui`, 15px semibold. Body copy is 17px. Reach for 13px only in badges and metadata.
-- Prices are written the Indonesian way, `Rp12.000`, in `type-price`. Quantities next to a name are `type-small` in `muted-foreground`.
+- Prices are `type-price`, written the way the app's locale writes them (`Rp12.000` in Indonesia). A portion or quantity next to a name is `type-small` in `muted-foreground`.
 - Sentence case everywhere, including the wordmark, which is lowercase. No all caps.
 - Text inputs stay at 17px so mobile browsers do not zoom on focus.
 
@@ -380,7 +390,7 @@ Rules:
 
 - Spacing uses the Tailwind 4px unit. Common steps: 8 (inside a control), 12 (between stacked options), 16 (page margin, inside a text field), 20 (between cards, card padding), 24 (button padding).
 - The page is `bg-background`. Content lives on white cards; the cream page is only ever a ground, with the page title and filters directly on it.
-- Cards form a grid with `gap-5` and `p-4` page margins: one column on phones, two from 480px, three from 1024px. Gallery cards keep a 9:10 ratio (`aspect-[9/10]`).
+- Cards form a grid with `gap-5` and `p-4` page margins: one column on phones, two from 480px, three from 1024px. Gallery cards keep at least a 9:10 ratio (`aspect-[9/10]`) and stretch to the tallest card in their row (`self-stretch`).
 - Big targets: default controls are 52px tall (`h-13`), small buttons and icon buttons 44px, chips 40px, toggles 72 by 40px, checkboxes and radios 24px. Never under 40px for anything a finger taps.
 - Inside a card, the content is centered and the footer holds the title on the left and quiet icon buttons on the right.
 - The ledge adds 4 or 6px below an element. Leave that room in stacked layouts: `gap-4` between buttons, `gap-5` between cards.
@@ -410,48 +420,59 @@ Icons are Lucide at 20px (`size-5`) with a 2.25 stroke in `currentColor`, round 
 
 ## Components
 
-Copy these recipes. The live versions are in `preview/index.html`; every class is a token, a type utility or a ledge.
+Copy these recipes. The live versions are in `preview/index.html`, with the same neutral content; every class is a token, a type utility or a ledge. `preview/demo.html` is an example screen, a snack shop's order page, built only from these recipes and layout utilities.
 
 ### Button
 
-52px, 16px radius, 2px border and a 4px ledge in the fill's edge shade. One primary button per view.
+52px, 16px radius, 2px border and a 4px ledge in the fill's edge shade. Four variants: primary, secondary, ghost and destructive. One primary button per view.
 
 ```html
-<button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover">Add to basket</button>
+<div class="flex flex-col items-center gap-4"><button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover">Save</button><button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-secondary-edge bg-secondary text-secondary-foreground ledge-secondary-edge hover:bg-secondary-edge/40">Continue</button><button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-transparent text-foreground hover:bg-accent">Cancel</button><button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-destructive-edge bg-destructive text-destructive-foreground ledge-destructive-edge hover:bg-destructive-edge">Delete</button></div>
 ```
 
-- Secondary: replace the color classes with `border-secondary-edge bg-secondary text-secondary-foreground ledge-secondary-edge hover:bg-secondary-edge/40`.
+- Primary: `border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover`.
+- Secondary: `border-secondary-edge bg-secondary text-secondary-foreground ledge-secondary-edge hover:bg-secondary-edge/40`.
 - Ghost: `border-transparent text-foreground hover:bg-accent`, no ledge.
-- Small (44px): `h-11 px-4 type-ui` instead of `h-13 px-6 text-base font-bold`.
-- A leading 20px icon goes before the label; the `gap-2` is already there.
+- Destructive: `border-destructive-edge bg-destructive text-destructive-foreground ledge-destructive-edge hover:bg-destructive-edge`, only for an action that deletes or cancels something for good.
+- The shared part is `inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40`.
+
+### Button sizes
+
+Default is 52px (`h-13 px-6 text-base font-bold`), small is 44px (`h-11 px-4 type-ui`). A leading 20px icon goes before the label; the `gap-2` is already there. Disabled buttons fade to 40% and take no clicks.
+
+```html
+<div class="flex flex-col items-center gap-4"><div class="flex items-center gap-3"><button type="button" class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover">Save</button><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-primary-edge bg-primary px-4 type-ui text-primary-foreground ledge-primary-edge transition active:translate-y-1 active:shadow-none hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-40">Save</button></div><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40"><!-- Lucide plus -->Add item</button><button type="button" disabled class="inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold transition active:translate-y-1 active:shadow-none disabled:pointer-events-none disabled:opacity-40 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover">Save</button></div>
+```
+
+- Use small buttons inside cards, toasts and empty states; default buttons for the main action of a screen.
 
 ### Icon button
 
-Raised, 44px, for actions on a card or in a header. Quiet, 40px, for rows and card footers.
+Raised, 44px, for actions on a card or in a header; raspberry for the add action; quiet, 40px, for rows and card footers. Every icon button has an `aria-label`.
 
 ```html
-<button type="button" aria-label="Save Klepon" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent"><!-- 20px Lucide icon --></button>
+<div class="flex items-center gap-5"><button type="button" aria-label="Save" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent"><!-- Lucide heart --></button><button type="button" aria-label="Notifications" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent"><!-- Lucide bell --></button><button type="button" aria-label="Add" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge transition active:translate-y-1 active:shadow-none hover:bg-primary-hover"><!-- Lucide plus --></button><button type="button" aria-label="Copy" class="inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground"><!-- Lucide copy --></button></div>
 ```
 
-- Quiet: `inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground`.
-- Raspberry (the add button on a product card): `border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover`.
+- Raised: `inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input`.
+- Quiet: `inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground`, no ledge.
 
 ### Stepper
 
-Quantity control, 52px: a white control with a 4px ledge, a remove button, a tabular value and an add button. Disable the remove button at the minimum, and update a total next to it.
+Quantity control, 52px: a white control with a 4px ledge, a remove button, a tabular value and an add button. Disable the remove button at the minimum and the add button at the maximum.
 
 ```html
-<div role="group" aria-label="Quantity of Klepon" class="inline-flex h-13 items-center rounded-lg border-2 border-input bg-card ledge-input"><button type="button" aria-label="Remove one" class="inline-flex size-12 items-center justify-center text-foreground transition hover:bg-accent disabled:pointer-events-none disabled:opacity-40 rounded-l-md"><!-- minus --></button><output class="min-w-10 text-center type-title tabular-nums">2</output><button type="button" aria-label="Add one" class="inline-flex size-12 items-center justify-center text-foreground transition hover:bg-accent disabled:pointer-events-none disabled:opacity-40 rounded-r-md"><!-- plus --></button></div>
+<div class="flex flex-col items-center gap-3"><div role="group" aria-label="Quantity" data-stepper class="inline-flex h-13 items-center rounded-lg border-2 border-input bg-card ledge-input"><button type="button" data-step="-1" aria-label="Remove one" disabled class="inline-flex size-12 items-center justify-center text-foreground transition hover:bg-accent disabled:pointer-events-none disabled:opacity-40 rounded-l-md"><!-- Lucide minus --></button><output class="min-w-10 text-center type-title tabular-nums">1</output><button type="button" data-step="1" aria-label="Add one" class="inline-flex size-12 items-center justify-center text-foreground transition hover:bg-accent disabled:pointer-events-none disabled:opacity-40 rounded-r-md"><!-- Lucide plus --></button></div><p class="type-small text-muted-foreground">Min 1, max 9</p></div>
 ```
 
-- On a product card the add button turns into a compact raspberry stepper (`h-11`, `border-primary-edge bg-primary text-primary-foreground ledge-primary-edge`, `size-10` buttons) and back when the count reaches zero.
+- On a product card the stepper is compact and raspberry (`h-11`, `size-10` buttons, `type-ui` value), and it turns back into the add button when the count reaches zero. Both are in the Product card recipe.
 
 ### Chip
 
 Filter chip, 40px, white with an `input` border and ledge. Selected: pink tint, raspberry border and ledge. Exactly one chip in a filter group has `aria-pressed="true"`.
 
 ```html
-<button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary">Sweet</button>
+<div role="group" aria-label="Filter" data-chips="single" class="flex flex-wrap justify-center gap-2.5"><button type="button" aria-pressed="true" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary">All</button><button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary">Option A</button><button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary">Option B</button><button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary">Option C</button></div>
 ```
 
 ### Category chips
@@ -459,25 +480,25 @@ Filter chip, 40px, white with an `input` border and ledge. Selected: pink tint, 
 The same chip with a color dot in front: the snack color of the category. Several may be pressed at once.
 
 ```html
-<button type="button" aria-pressed="true" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary"><span class="size-2.5 rounded-full bg-pandan"></span>Kue basah</button>
+<div role="group" aria-label="Categories" data-chips="multi" class="flex flex-wrap justify-center gap-2.5"><button type="button" aria-pressed="true" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary"><span class="size-2.5 rounded-full bg-pandan"></span>Category A</button><button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary"><span class="size-2.5 rounded-full bg-martabak"></span>Category B</button><button type="button" aria-pressed="false" class="inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary"><span class="size-2.5 rounded-full bg-cendol"></span>Category C</button></div>
 ```
 
 - Dots: `bg-pandan`, `bg-martabak`, `bg-cendol`, `bg-gula`. Give a category one color and keep it everywhere the category shows.
 
 ### Toggle
 
-72 by 40px switch with a ledge: cream and `input` when off, raspberry and `primary-edge` when on. The thumb is a white rounded square that slides with a small bounce. Flip `aria-checked` on click; label it with `aria-labelledby`.
+72 by 40px switch with a ledge: cream and `input` when off, raspberry and `primary-edge` when on. The thumb is a white rounded square that slides with a small bounce. Flip `aria-checked` on click; label it with `aria-labelledby`. A disabled toggle fades to 40% and its label turns `text-muted-foreground`.
 
 ```html
-<button type="button" role="switch" aria-checked="true" aria-labelledby="toggle-sugar" class="group relative h-10 w-18 rounded-lg border-2 border-input bg-muted ledge-input transition active:translate-y-1 active:shadow-none aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge disabled:opacity-40"><span class="absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge"></span></button>
+<div class="flex w-full max-w-64 flex-col gap-5"><div class="flex items-center justify-between gap-4"><span id="toggle-a" class="type-ui">Notifications</span><button type="button" role="switch" aria-checked="true" aria-labelledby="toggle-a" class="group relative h-10 w-18 rounded-lg border-2 border-input bg-muted ledge-input transition active:translate-y-1 active:shadow-none aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge disabled:opacity-40"><span class="absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge"></span></button></div><div class="flex items-center justify-between gap-4"><span id="toggle-b" class="type-ui">Email updates</span><button type="button" role="switch" aria-checked="false" aria-labelledby="toggle-b" class="group relative h-10 w-18 rounded-lg border-2 border-input bg-muted ledge-input transition active:translate-y-1 active:shadow-none aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge disabled:opacity-40"><span class="absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge"></span></button></div><div class="flex items-center justify-between gap-4"><span id="toggle-c" class="type-ui text-muted-foreground">Disabled</span><button type="button" role="switch" aria-checked="false" aria-labelledby="toggle-c" disabled class="group relative h-10 w-18 rounded-lg border-2 border-input bg-muted ledge-input transition active:translate-y-1 active:shadow-none aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge disabled:opacity-40"><span class="absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge"></span></button></div></div>
 ```
 
 ### Slider
 
-A native range input with the `jajan-slider` utility from `jajan.css`: a 12px track with a 2px border, a raspberry fill and a 28px white thumb with a raspberry border and a 2px ledge. Chrome and Safari need `--slider-fill` to paint the filled part, so update it on every `input` event, and show the value in an `output`.
+A native range input with the `jajan-slider` utility from `jajan.css`: a 12px track with a 2px border, a raspberry fill and a 28px white thumb with a raspberry border and a 2px ledge. Chrome and Safari need `--slider-fill` to paint the filled part, so update it on every `input` event, and show the value in an `output`. Disabled sliders fade to 40%.
 
 ```html
-<label class="block w-full max-w-60"><span class="flex justify-between type-ui">Sweetness<output class="text-muted-foreground tabular-nums">60%</output></span><input type="range" min="0" max="100" value="60" class="jajan-slider mt-2" /></label>
+<div class="flex w-full max-w-60 flex-col gap-6"><label class="block"><span class="flex justify-between type-ui">Volume<output class="text-muted-foreground tabular-nums">60%</output></span><input type="range" min="0" max="100" value="60" class="jajan-slider mt-2" /></label><label class="block"><span class="flex justify-between type-ui text-muted-foreground">Disabled<output class="tabular-nums">30%</output></span><input type="range" min="0" max="100" value="30" disabled class="jajan-slider mt-2" /></label></div>
 ```
 
 ```js
@@ -486,10 +507,10 @@ el.style.setProperty('--slider-fill', `${((el.value - el.min) / (el.max - el.min
 
 ### Single selection (radio)
 
-Native radios in a `fieldset` with a `legend`. 24px, a 2px `input` border; checked is a raspberry fill with a white dot (`jajan-radio`).
+Native radios in a `fieldset` with a `legend`. 24px, a 2px `input` border; checked is a raspberry fill with a white dot (`jajan-radio`). A disabled option fades with `has-disabled:opacity-40` on its label.
 
 ```html
-<label class="flex items-center gap-3 type-small"><input type="radio" name="fulfilment" checked class="size-6 appearance-none rounded-full border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-radio" />Pickup at 16:00</label>
+<fieldset class="space-y-3"><legend class="type-ui mb-3">Choose one</legend><label class="flex items-center gap-3 type-small"><input type="radio" name="choice" checked class="size-6 appearance-none rounded-full border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-radio" />Option A</label><label class="flex items-center gap-3 type-small"><input type="radio" name="choice" class="size-6 appearance-none rounded-full border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-radio" />Option B</label><label class="flex items-center gap-3 type-small has-disabled:opacity-40"><input type="radio" name="choice" disabled class="size-6 appearance-none rounded-full border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-radio" />Option C</label></fieldset>
 ```
 
 Stack options with `space-y-3`; the legend is `type-ui mb-3`.
@@ -499,7 +520,7 @@ Stack options with `space-y-3`; the legend is `type-ui mb-3`.
 The same as the radio, as a 24px rounded square with a white check (`jajan-check`).
 
 ```html
-<label class="flex items-center gap-3 type-small"><input type="checkbox" checked class="size-6 appearance-none rounded-xs border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-check" />Extra grated coconut</label>
+<fieldset class="space-y-3"><legend class="type-ui mb-3">Choose any</legend><label class="flex items-center gap-3 type-small"><input type="checkbox" checked class="size-6 appearance-none rounded-xs border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-check" />Option A</label><label class="flex items-center gap-3 type-small"><input type="checkbox" class="size-6 appearance-none rounded-xs border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-check" />Option B</label><label class="flex items-center gap-3 type-small has-disabled:opacity-40"><input type="checkbox" disabled class="size-6 appearance-none rounded-xs border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-check" />Option C</label></fieldset>
 ```
 
 ### Text field
@@ -507,17 +528,23 @@ The same as the radio, as a 24px rounded square with a white check (`jajan-check
 52px, 16px radius, 2px `input` border and ledge, with a visible label above. The text is 17px.
 
 ```html
-<label class="block w-full max-w-64"><span class="type-ui">Note for the seller</span><input type="text" placeholder="Extra grated coconut" class="mt-2 h-13 w-full rounded-lg border-2 border-input bg-card px-4 type-body text-foreground ledge-input placeholder:text-muted-foreground disabled:opacity-40" /></label>
+<label class="block w-full max-w-64"><span class="type-ui">Email</span><input type="email" placeholder="name@example.com" class="mt-2 h-13 w-full rounded-lg border-2 border-input bg-card px-4 type-body text-foreground ledge-input placeholder:text-muted-foreground disabled:opacity-40" /></label>
 ```
 
-For an error, add `aria-invalid="true"`, swap `border-input ledge-input` for `border-destructive ledge-destructive-edge`, and put a `type-small text-destructive` message below that says how to fix the value.
+### Text field states
+
+An error swaps `border-input ledge-input` for `border-destructive ledge-destructive-edge`, sets `aria-invalid="true"` and points `aria-describedby` at a message below that says how to fix the value. The message is `type-small` in the text color with a 20px `circle-alert` icon in `text-destructive`: red text would be 3.1:1 on the dark card. A disabled field fades to 40%.
+
+```html
+<div class="flex w-full max-w-64 flex-col gap-5"><div><label class="block"><span class="type-ui">Email</span><input type="email" value="name@example" aria-invalid="true" aria-describedby="email-error" class="mt-2 h-13 w-full rounded-lg border-2 border-destructive bg-card px-4 type-body text-foreground ledge-destructive-edge placeholder:text-muted-foreground" /></label><p id="email-error" class="mt-3 flex gap-2 type-small"><span class="mt-px shrink-0 text-destructive"><!-- Lucide circle-alert --></span>Enter an email such as name@example.com.</p></div><label class="block"><span class="type-ui">Name</span><input type="text" placeholder="Name" disabled class="mt-2 h-13 w-full rounded-lg border-2 border-input bg-card px-4 type-body text-foreground ledge-input placeholder:text-muted-foreground disabled:opacity-40" /></label></div>
+```
 
 ### Segmented control
 
 A cream track with a 2px border; the selected segment is a raised white tab with a 2px ledge.
 
 ```html
-<div role="tablist" aria-label="Fulfilment" class="inline-flex rounded-lg border-2 border-border bg-muted p-1"><button type="button" role="tab" aria-selected="true" class="h-10 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Pickup</button></div>
+<div role="tablist" aria-label="Period" class="inline-flex rounded-lg border-2 border-border bg-muted p-1"><button type="button" role="tab" aria-selected="true" class="h-10 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Day</button><button type="button" role="tab" aria-selected="false" class="h-10 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Week</button><button type="button" role="tab" aria-selected="false" class="h-10 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Month</button></div>
 ```
 
 ### Badge
@@ -525,56 +552,53 @@ A cream track with a 2px border; the selected segment is a raised white tab with
 Status is a colored dot plus a word on a cream badge, never color alone.
 
 ```html
-<span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-success"></span>Open until 17:00</span>
+<div class="flex flex-col items-start gap-3"><span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-success"></span>Active</span><span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-warning"></span>Pending</span><span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-destructive"></span>Failed</span><span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-muted-foreground"></span>Draft</span></div>
 ```
 
-- Dots: `bg-success`, `bg-warning`, `bg-destructive`.
+- Dots: `bg-success` (active, done), `bg-warning` (pending, waiting), `bg-destructive` (failed), `bg-muted-foreground` (draft, inactive).
 
 ### Sticker badge
 
 A promotional label that sits on a product picture: a solid snack fill with a 3px white die-cut border and a 2px ring in the edge shade, tilted a few degrees.
 
 ```html
-<span class="inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2 -rotate-3 bg-martabak text-martabak-foreground ring-martabak-edge">Best seller</span>
+<div class="flex flex-wrap items-center justify-center gap-5"><span class="inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2 -rotate-3 bg-martabak text-martabak-foreground ring-martabak-edge">New</span><span class="inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2 rotate-2 bg-pandan text-pandan-foreground ring-pandan-edge">Popular</span><span class="inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2 -rotate-2 bg-primary text-primary-foreground ring-primary-edge">-20%</span></div>
 ```
 
-- Other fills: `bg-pandan text-pandan-foreground ring-pandan-edge` (New), `bg-primary text-primary-foreground ring-primary-edge` (Save 20%). Tilt between -3 and 3 degrees, and never more than one sticker per picture.
+- Fills: `bg-martabak text-martabak-foreground ring-martabak-edge`, `bg-pandan text-pandan-foreground ring-pandan-edge`, `bg-primary text-primary-foreground ring-primary-edge`. Tilt between -3 and 3 degrees, and never more than one sticker per picture.
 
 ### Progress
 
 A 16px cream track with a 2px border and a raspberry fill. Say what is happening and how far, in words.
 
 ```html
-<div class="w-full max-w-60"><div class="flex justify-between type-ui"><span>Packing your order</span><span class="text-muted-foreground tabular-nums">2 of 3</span></div><div role="progressbar" aria-label="Order progress" aria-valuenow="2" aria-valuemin="0" aria-valuemax="3" aria-valuetext="Packing, step 2 of 3" class="mt-2 h-4 overflow-hidden rounded-xs border-2 border-border bg-muted"><div class="h-full w-2/3 rounded-r-[4px] bg-primary"></div></div></div>
+<div class="w-full max-w-60"><div class="flex justify-between type-ui"><span>Uploading</span><span class="text-muted-foreground tabular-nums">64%</span></div><div role="progressbar" aria-label="Uploading" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" class="mt-2 h-4 overflow-hidden rounded-xs border-2 border-border bg-muted"><div class="h-full w-[64%] rounded-r-[4px] bg-primary"></div></div></div>
 ```
 
 ### Rating
 
-Five radios in a `fieldset` with the `jajan-rating` utility: stars up to the checked one fill in martabak yellow with a darker outline. Arrow keys move the rating; the label shows the focus ring.
+Five radios in a `fieldset` with the `jajan-rating` utility: stars up to the checked one fill in martabak yellow with a darker outline. Arrow keys move the rating; the label shows the focus ring. Write the result next to it in `type-small`.
 
 ```html
-<fieldset class="jajan-rating flex gap-1"><legend class="sr-only">Rate Klepon</legend><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="1" class="sr-only" /><span class="sr-only">1 star</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" class="size-8 text-input transition" aria-hidden="true"><!-- Lucide star path --></svg></label></fieldset>
+<div class="flex flex-col items-center gap-2"><fieldset data-rating class="jajan-rating flex gap-1"><legend class="sr-only">Rating</legend><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="1" class="sr-only" /><span class="sr-only">1 star</span><!-- Lucide star --></label><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="2" class="sr-only" /><span class="sr-only">2 stars</span><!-- Lucide star --></label><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="3" class="sr-only" /><span class="sr-only">3 stars</span><!-- Lucide star --></label><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="4" checked class="sr-only" /><span class="sr-only">4 stars</span><!-- Lucide star --></label><label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="rating" value="5" class="sr-only" /><span class="sr-only">5 stars</span><!-- Lucide star --></label></fieldset><p class="type-small text-muted-foreground"><output>4 of 5</output></p></div>
 ```
-
-Repeat the label five times with values 1 to 5, and write the result next to it in `type-small`: "Klepon, 4 of 5".
 
 ### Avatar
 
-A 44px rounded square in a snack color with one initial, a 2px edge border and a 2px `card` ring so a group can overlap.
+A rounded square in a snack color with one or two initials, a 2px edge border. Large is 64px (`size-16 rounded-lg type-h3`), default 44px with a 2px `card` ring so a group can overlap.
 
 ```html
-<span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-pandan-edge bg-pandan text-pandan-foreground">S</span>
+<div class="flex flex-col items-center gap-5"><span class="inline-flex size-16 items-center justify-center rounded-lg border-2 border-pandan-edge bg-pandan type-h3 text-pandan-foreground">AB</span><div class="flex -space-x-2"><span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-martabak-edge bg-martabak text-martabak-foreground">AB</span><span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-primary-edge bg-primary text-primary-foreground">CD</span><span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-cendol-edge bg-cendol text-cendol-foreground">EF</span><span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-gula-edge bg-gula text-gula-foreground">GH</span><span class="inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card border-border bg-muted text-muted-foreground">+3</span></div></div>
 ```
 
-- Group: `<div class="flex -space-x-3">` with up to four avatars and a count avatar in `border-border bg-muted text-muted-foreground`.
-- Large: `size-16 rounded-lg type-h3`.
+- Group: `flex -space-x-2` with up to four avatars and a count avatar in `border-border bg-muted text-muted-foreground`.
 
 ### List
 
-Rows of 56px in a 20px-radius panel with 2px dividers. Prices sit right in tabular figures.
+Rows of 56px in a 20px-radius panel with 2px dividers. A value or a chevron sits on the right; numbers use tabular figures.
 
 ```html
-<ul class="w-full max-w-64 divide-y-2 divide-border overflow-hidden rounded-xl border-2 border-border bg-card"><li class="flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums"><span>Klepon <span class="text-muted-foreground">×2</span></span><span>Rp24.000</span></li></ul>
+<ul class="w-full max-w-64 divide-y-2 divide-border overflow-hidden rounded-xl border-2 border-border bg-card"><li class="flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums">Account<span class="text-muted-foreground"><!-- Lucide chevron-right --></span></li><li class="flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums">Notifications<span class="text-muted-foreground"><!-- Lucide chevron-right --></span></li><li class="flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums">Privacy<span class="text-muted-foreground"><!-- Lucide chevron-right --></span></li></ul>
 ```
 
 ### Toast
@@ -582,15 +606,15 @@ Rows of 56px in a 20px-radius panel with 2px dividers. Prices sit right in tabul
 A short confirmation with a pandan check and one text action. It is a 20px-radius panel with a 6px ledge; `role="status"` reads it out.
 
 ```html
-<div role="status" class="flex w-full max-w-80 items-center gap-3 rounded-xl border-2 border-border bg-card py-3 pr-2 pl-4 ledge-lg-border"><span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border-2 border-pandan-edge bg-pandan text-pandan-foreground"><!-- check --></span><p class="flex-1 type-ui">Klepon added to your basket</p><button type="button" class="h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Undo</button></div>
+<div role="status" class="flex w-full max-w-88 items-center gap-3 rounded-xl border-2 border-border bg-card py-3 pr-2 pl-4 ledge-lg-border"><span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border-2 border-pandan-edge bg-pandan text-pandan-foreground"><!-- Lucide check --></span><p class="flex-1 type-ui">A toast confirms an action</p><button type="button" class="h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Undo</button></div>
 ```
 
 ### Empty state
 
-An illustration built from the palette's shapes, a title, one line of help and a secondary button. The basket below is `gula` with `gula-edge` strokes and a `muted` shadow.
+An illustration built from the palette's shapes, a title, one line of help and a small secondary button. The box below is `gula` with `gula-edge` strokes and a `muted` shadow.
 
 ```html
-<div class="flex flex-col items-center text-center"><svg viewBox="0 0 120 96" class="h-24" aria-hidden="true"><ellipse cx="60" cy="90" rx="42" ry="5" class="fill-muted"/><path d="M38 40C38 16 82 16 82 40" class="stroke-gula-edge" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M22 42h76l-8 42q-30 6-60 0z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M29 56h62M27 70h58" class="stroke-gula-edge" stroke-width="2.5" opacity=".45"/><rect x="18" y="36" width="84" height="12" rx="6" class="fill-gula-edge"/></svg><h3 class="mt-4 type-title">Your basket is empty</h3><p class="mt-1 type-small text-muted-foreground">Snacks you add show up here.</p><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40 mt-4">Browse snacks</button></div>
+<div class="flex flex-col items-center text-center"><svg viewBox="0 0 120 96" class="h-24" aria-hidden="true"><ellipse cx="60" cy="90" rx="44" ry="5" class="fill-muted"/><path d="M22 42 60 30l38 12-38 12z" class="fill-gula-edge stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M22 42 60 54v32L22 74z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M98 42 60 54v32l38-12z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M22 42 8 28l38-12 14 14z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M98 42l14-14-38-12-14 14z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/></svg><h3 class="mt-4 type-title">Nothing here yet</h3><p class="mt-1 max-w-60 type-small text-muted-foreground">An empty state says what will show up here and how to start.</p><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40 mt-4">Add item</button></div>
 ```
 
 ### Spinner
@@ -603,36 +627,46 @@ Three snack-colored dots that hop in turn (`jajan-hop`). It stops under `prefers
 
 ### Product card
 
-A 224px card: a cream picture panel with an illustration made of shapes, the name with the portion in `type-small`, the price in rupiah and a raspberry add button. The name's quantity, the price and the button are the whole offer; no description.
+A 224px card: a cream picture panel, the product name, a short description, the price and a compact raspberry stepper. The picture is an illustration made of shapes; the slot below is a neutral placeholder. A sticker may sit in the picture's top-left corner.
 
 ```html
-<article class="w-56 rounded-3xl border-2 border-border bg-card p-2 pb-3 ledge-lg-border"><div class="flex aspect-[16/10] items-center justify-center rounded-xl bg-muted"><!-- illustration: fill-pandan stroke-pandan-edge circles with fill-white speckles on a fill-card plate --></div><div class="px-2 pt-3"><h3 class="type-title">Klepon <span class="type-small text-muted-foreground">5 pcs</span></h3><div class="mt-3 flex items-center justify-between"><span class="type-price">Rp12.000</span><button type="button" aria-label="Add Klepon to basket" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge transition active:translate-y-1 active:shadow-none hover:bg-primary-hover"><!-- plus --></button></div></div></article>
+<article class="w-56 rounded-3xl border-2 border-border bg-card p-2 pb-3 ledge-lg-border"><div class="relative flex aspect-[16/10] items-center justify-center rounded-xl bg-muted"><svg viewBox="0 0 160 100" class="h-24" aria-hidden="true"><ellipse cx="92" cy="86" rx="52" ry="6" class="fill-border"/><rect x="88" y="26" width="52" height="52" rx="14" class="fill-cendol stroke-cendol-edge" stroke-width="3" transform="rotate(8 114 52)"/><circle cx="76" cy="54" r="28" class="fill-martabak stroke-martabak-edge" stroke-width="3"/></svg><span class="inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2 absolute top-2.5 left-2.5 -rotate-3 bg-pandan text-pandan-foreground ring-pandan-edge">New</span></div><div class="px-2 pt-3"><h3 class="type-title">Product name</h3><p class="mt-0.5 type-small text-muted-foreground">Short description</p><div class="mt-3 flex items-center justify-between gap-2"><span class="type-price">00.00</span><div role="group" aria-label="Quantity of Product name" data-stepper data-min="0" class="inline-flex h-11 items-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge"><button type="button" data-step="-1" aria-label="Remove one" class="inline-flex size-10 items-center justify-center rounded-l-sm transition hover:bg-primary-hover focus-visible:outline-primary-foreground focus-visible:-outline-offset-4"><!-- Lucide minus --></button><output class="min-w-6 text-center type-ui tabular-nums">1</output><button type="button" data-step="1" aria-label="Add one" class="inline-flex size-10 items-center justify-center rounded-r-sm transition hover:bg-primary-hover focus-visible:outline-primary-foreground focus-visible:-outline-offset-4"><!-- Lucide plus --></button></div></div></div></article>
 ```
+
+Before the first add, the stepper is a single raspberry add button, and it comes back when the count reaches zero:
+
+```html
+<button type="button" data-add aria-label="Add Product name" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge transition active:translate-y-1 active:shadow-none hover:bg-primary-hover"><!-- Lucide plus --></button>
+```
+
+- Prices are written the way the app's locale writes them, in `type-price`, for example `Rp12.000` in Indonesia.
+- Keep the description to one line or two. Put the portion or quantity at its end.
 
 ### Card
 
 White, 28px radius, 2px `border` and a 6px ledge. Content cards have `p-5`; gallery cards center their content and keep a footer.
 
 ```html
-<article class="w-full max-w-64 rounded-3xl border-2 border-border bg-card p-5 ledge-lg-border"><p class="type-caption text-muted-foreground">Pickup</p><h3 class="mt-1 type-title">Today at 16:00</h3><p class="mt-1 type-small text-muted-foreground">Pasar Antri, stall 12. Show your order code at the stall.</p><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40 mt-4">Change time</button></article>
+<article class="w-full max-w-64 rounded-3xl border-2 border-border bg-card p-5 ledge-lg-border"><p class="type-caption text-muted-foreground">Label</p><h3 class="mt-1 type-title">Card title</h3><p class="mt-1 type-small text-muted-foreground">Supporting text that explains the item in a line or two.</p><button type="button" class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40 mt-4">Continue</button></article>
 ```
 
-Gallery card: `flex aspect-[9/10] flex-col rounded-3xl border-2 border-border bg-card ledge-lg-border`, a centered demo area with `px-6 pt-6`, and a 64px footer with the title in `type-ui` and quiet icon buttons.
+Gallery card: `flex aspect-[9/10] flex-col self-stretch rounded-3xl border-2 border-border bg-card ledge-lg-border` (cards in a row share the tallest height), a centered demo area with `px-6 pt-6`, and a 64px footer with the title in `type-ui` and quiet icon buttons.
+
 
 ### Focus
 
-Every interactive element gets the global focus ring from `jajan.css`: a 3px `ring` outline with a 2px offset, raspberry in light mode and a lighter pink in the dark. Do not remove it. Controls whose input is visually hidden (the rating) draw it on their label with `has-focus-visible:outline-ring`.
+Every interactive element gets the global focus ring from `jajan.css`: a 3px `ring` outline with a 2px offset, raspberry in light mode and a lighter pink in the dark. Do not remove it. Controls whose input is visually hidden (the rating) draw it on their label with `has-focus-visible:outline-ring`. Buttons inside a raspberry fill, such as the compact stepper on a product card, would hide a raspberry ring, so theirs is white and inset: `focus-visible:outline-primary-foreground focus-visible:-outline-offset-4`.
 
 ## Do's and Don'ts
 
 - Do give every raised control a 2px border and a ledge in the darker shade of its own fill, and sink it on press with `active:translate-y-1 active:shadow-none`.
 - Do keep one primary button per view. A second action is secondary or ghost.
 - Do use the snack colors for categories, avatars, stickers and illustrations, each with its own `-foreground` and `-edge`.
-- Do pair every status color with a word, and write prices as `Rp12.000`.
+- Do pair every status color with a word, and set prices in `type-price`.
 - Do keep targets big: 52px controls, 44px icon buttons, 40px chips, 24px checkboxes.
 - Do give icon-only buttons an `aria-label` and form controls a visible label.
 - Don't use pills. The largest radius on a control is 16px; only radios, dots and the spinner are circles.
 - Don't blur, layer or tint shadows. Depth is one hard ledge.
-- Don't put raspberry text on dark surfaces; text actions are `secondary-foreground`.
+- Don't put raspberry or red text on dark surfaces; text actions are `secondary-foreground`, error messages are `foreground` with a red icon.
 - Don't use the default Tailwind palette, hard-coded hex values, gradients or emoji.
 - Don't shrink interface text below 13px or text inputs below 16px.

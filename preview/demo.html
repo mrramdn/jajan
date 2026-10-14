@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jajan example: snack shop order</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="preview.css" />
+  </head>
+  <body>
+    <div class="mx-auto max-w-7xl px-4 pt-6 pb-12 sm:px-6">
+      <header class="flex flex-wrap items-center gap-x-6 gap-y-5">
+        <div class="flex min-w-0 flex-1 basis-80 items-center gap-4">
+          <span class="hidden size-16 shrink-0 items-center justify-center rounded-lg border-2 border-gula-edge bg-gula type-h3 min-[480px]:inline-flex text-gula-foreground" aria-hidden="true">BR</span>
+          <div class="min-w-0">
+            <p class="type-caption text-muted-foreground">Pasar Kosambi, Bandung</p>
+            <h1 class="mt-0.5 type-h2">Jajan Bu Ratna</h1>
+            <div class="mt-2.5 flex flex-wrap items-center gap-2">
+              <span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-success"></span>Open until 17:00</span>
+              <span class="inline-flex h-8 items-center gap-1.5 rounded-md border-2 border-border bg-muted px-3 type-caption"><svg viewBox="0 0 24 24" class="size-4 fill-martabak stroke-martabak-edge" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>4.8<span class="font-normal text-muted-foreground">1,240 ratings</span></span>
+              <span class="inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption"><span class="size-2.5 rounded-full bg-warning"></span>Busy, about 20 min</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex w-full items-center gap-3 sm:w-auto">
+          <label class="relative block min-w-0 flex-1 sm:w-72 sm:flex-none">
+            <span class="sr-only">Search the menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none absolute top-4 left-4 text-muted-foreground" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            <input id="search" type="search" placeholder="Search snacks" class="h-13 w-full rounded-lg border-2 border-input bg-card pr-4 pl-11 type-body text-foreground ledge-input placeholder:text-muted-foreground" />
+          </label>
+          <button id="save-shop" type="button" aria-label="Save Jajan Bu Ratna" aria-pressed="false" class="group inline-flex size-11 shrink-0 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition active:translate-y-1 active:shadow-none hover:bg-accent">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" class="group-aria-pressed:fill-primary group-aria-pressed:text-primary-edge" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
+          </button>
+          <span class="inline-flex size-11 shrink-0 items-center justify-center rounded-md border-2 border-cendol-edge bg-cendol type-ui text-cendol-foreground ring-2 ring-card" title="Dewi Anggraini" aria-label="Signed in as Dewi Anggraini" role="img">DA</span>
+        </div>
+      </header>
+
+      <div class="mt-8 grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <main>
+          <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3">
+            <h2 class="type-h3">Menu</h2>
+            <p id="menu-count" class="type-small text-muted-foreground">9 snacks, made this morning</p>
+          </div>
+          <div id="categories" role="group" aria-label="Categories" class="-mx-1 mt-4 flex flex-wrap gap-2.5 px-1 pb-1"></div>
+          <div id="products" class="mt-6 grid grid-cols-[repeat(auto-fill,minmax(13.5rem,1fr))] gap-5"></div>
+          <div id="no-match" hidden class="mt-6 flex flex-col items-center rounded-3xl border-2 border-border bg-card px-5 py-10 text-center ledge-lg-border">
+            <h3 class="type-title">No snacks match your search</h3>
+            <p class="mt-1 max-w-72 type-small text-muted-foreground">Try another name, such as klepon or risoles, or show the whole menu.</p>
+            <button id="clear-search" type="button" class="mt-4 inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge transition active:translate-y-1 active:shadow-none hover:bg-secondary-edge/40">Show all snacks</button>
+          </div>
+        </main>
+
+        <aside class="flex flex-col gap-5" aria-label="Your order">
+          <div id="toast" role="status" class="flex w-full items-center gap-3 rounded-xl border-2 border-border bg-card py-3 pr-2 pl-4 ledge-lg-border">
+            <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border-2 border-pandan-edge bg-pandan text-pandan-foreground"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></span>
+            <p id="toast-text" class="flex-1 type-ui">Klepon added to your order</p>
+            <button id="undo" type="button" class="h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Undo</button>
+          </div>
+
+          <section class="rounded-3xl border-2 border-border bg-card p-5 ledge-lg-border" aria-labelledby="order-title">
+            <div class="flex items-baseline justify-between gap-3">
+              <h2 id="order-title" class="type-title">Your order</h2>
+              <p id="order-count" class="type-small text-muted-foreground tabular-nums">4 items</p>
+            </div>
+
+            <div role="tablist" aria-label="How you get it" class="mt-4 flex w-full rounded-lg border-2 border-border bg-muted p-1">
+              <button type="button" role="tab" aria-selected="true" data-mode="delivery" class="h-10 flex-1 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Delivery</button>
+              <button type="button" role="tab" aria-selected="false" data-mode="pickup" class="h-10 flex-1 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input">Pickup</button>
+            </div>
+
+            <div class="mt-4 flex items-start justify-between gap-3">
+              <div>
+                <p id="where-label" class="type-caption text-muted-foreground">Deliver to</p>
+                <p id="where" class="mt-1 type-ui">Jl. Sukajadi 41, Bandung</p>
+                <p id="when" class="mt-0.5 type-small text-muted-foreground">Arrives in 30 to 45 min</p>
+              </div>
+              <button id="change" type="button" class="-mr-1 h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Change</button>
+            </div>
+
+            <div id="filled">
+              <ul id="lines" class="mt-4 w-full divide-y-2 divide-border overflow-hidden rounded-xl border-2 border-border bg-card"></ul>
+
+              <div id="free" class="mt-5">
+                <p id="free-text" class="type-ui">Add Rp18.000 for free delivery</p>
+                <div id="free-bar" role="progressbar" aria-label="Toward free delivery" aria-valuemin="0" aria-valuemax="75000" aria-valuenow="57000" class="mt-2 h-4 overflow-hidden rounded-xs border-2 border-border bg-muted"><div id="free-fill" class="h-full rounded-r-[4px] bg-primary transition-[width]" style="width: 76%"></div></div>
+                <p class="mt-2 type-small text-muted-foreground">Delivery is free from Rp75.000.</p>
+              </div>
+
+              <label class="mt-5 block">
+                <span class="type-ui">Note for Bu Ratna</span>
+                <input type="text" placeholder="Less sugar in the cendol, please" class="mt-2 h-13 w-full rounded-lg border-2 border-input bg-card px-4 type-body text-foreground ledge-input placeholder:text-muted-foreground" />
+              </label>
+
+              <div class="mt-5 flex items-center justify-between gap-4">
+                <span id="plastic-label" class="type-ui">Plastic-free packaging</span>
+                <button type="button" role="switch" aria-checked="true" aria-labelledby="plastic-label" class="group relative h-10 w-18 shrink-0 rounded-lg border-2 border-input bg-muted ledge-input transition active:translate-y-1 active:shadow-none aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge"><span class="absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge"></span></button>
+              </div>
+
+              <dl class="mt-5 space-y-2 border-t-2 border-border pt-4 type-small tabular-nums">
+                <div class="flex justify-between"><dt class="text-muted-foreground">Subtotal</dt><dd id="subtotal">Rp57.000</dd></div>
+                <div class="flex justify-between"><dt class="text-muted-foreground">Delivery</dt><dd id="fee">Rp8.000</dd></div>
+                <div class="flex items-baseline justify-between pt-1"><dt class="type-ui">Total</dt><dd id="total" class="type-price">Rp65.000</dd></div>
+              </dl>
+
+              <button id="place" type="button" class="mt-5 inline-flex h-13 w-full items-center justify-center gap-2 rounded-lg border-2 border-primary-edge bg-primary px-6 text-base font-bold text-primary-foreground ledge-primary-edge transition active:translate-y-1 active:shadow-none hover:bg-primary-hover disabled:pointer-events-none disabled:opacity-40">Place order</button>
+            </div>
+
+            <div id="empty" hidden class="flex flex-col items-center pt-8 pb-2 text-center">
+              <svg viewBox="0 0 120 96" class="h-24" aria-hidden="true"><ellipse cx="60" cy="90" rx="42" ry="5" class="fill-muted" /><path d="M38 40C38 16 82 16 82 40" class="stroke-gula-edge" stroke-width="5" fill="none" stroke-linecap="round" /><path d="M22 42h76l-8 42q-30 6-60 0z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round" /><path d="M29 56h62M27 70h58" class="stroke-gula-edge" stroke-width="2.5" opacity=".45" /><rect x="18" y="36" width="84" height="12" rx="6" class="fill-gula-edge" /></svg>
+              <h3 class="mt-4 type-title">Your order is empty</h3>
+              <p class="mt-1 max-w-64 type-small text-muted-foreground">Add snacks from the menu and they show up here.</p>
+            </div>
+          </section>
+
+          <section class="rounded-3xl border-2 border-border bg-card p-5 ledge-lg-border" aria-labelledby="last-title">
+            <p class="type-caption text-muted-foreground">Last order, 12 Oct</p>
+            <h2 id="last-title" class="mt-1 type-title">How were the kue lumpur?</h2>
+            <p class="mt-1 type-small text-muted-foreground">Kue lumpur ×4 and es cendol ×2, picked up at the stall.</p>
+            <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <fieldset id="rating" class="jajan-rating flex gap-1"><legend class="sr-only">Rate your last order</legend></fieldset>
+              <p class="type-small text-muted-foreground"><output id="rating-text">Tap a star</output></p>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      const icon = (paths) =>
+        `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+      const plus = icon('<path d="M5 12h14"/><path d="M12 5v14"/>');
+      const minus = icon('<path d="M5 12h14"/>');
+      const press = 'transition active:translate-y-1 active:shadow-none';
+      const chip = `inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input ${press} hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary`;
+      const sticker = 'inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2';
+      const row = 'flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums';
+      const plate = '<ellipse cx="80" cy="80" rx="64" ry="12" class="fill-card stroke-border" stroke-width="3"/>';
+
+      // Each snack is drawn from the palette's shapes, with 3px strokes in the -edge shade.
+      const art = {
+        klepon: `${plate}<circle cx="52" cy="56" r="26" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><circle cx="108" cy="56" r="26" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><circle cx="80" cy="62" r="27" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><g class="fill-white"><circle cx="42" cy="48" r="2.5"/><circle cx="56" cy="42" r="2"/><circle cx="48" cy="64" r="2"/><circle cx="34" cy="58" r="1.8"/><circle cx="100" cy="44" r="2.5"/><circle cx="116" cy="52" r="2"/><circle cx="104" cy="66" r="1.8"/><circle cx="124" cy="62" r="2"/><circle cx="70" cy="52" r="2.5"/><circle cx="84" cy="46" r="2"/><circle cx="92" cy="60" r="2.2"/><circle cx="74" cy="72" r="2"/><circle cx="86" cy="78" r="1.8"/><circle cx="64" cy="66" r="1.6"/></g>`,
+        lumpur: `${plate}<path d="M28 44v16a28 10 0 0 0 56 0V44" class="fill-martabak-edge stroke-martabak-edge" stroke-width="3"/><ellipse cx="56" cy="44" rx="28" ry="10" class="fill-martabak stroke-martabak-edge" stroke-width="3"/><ellipse cx="56" cy="44" rx="14" ry="4.5" class="fill-martabak-edge"/><ellipse cx="56" cy="43" rx="4" ry="2.5" class="fill-gula-edge"/><path d="M78 56v16a28 10 0 0 0 56 0V56" class="fill-martabak-edge stroke-martabak-edge" stroke-width="3"/><ellipse cx="106" cy="56" rx="28" ry="10" class="fill-martabak stroke-martabak-edge" stroke-width="3"/><ellipse cx="106" cy="56" rx="14" ry="4.5" class="fill-martabak-edge"/><ellipse cx="106" cy="55" rx="4" ry="2.5" class="fill-gula-edge"/>`,
+        lemper: `${plate}<g transform="rotate(-8 80 50)"><rect x="34" y="30" width="86" height="30" rx="12" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><path d="M50 34v22M66 34v22M82 34v22M98 34v22" class="stroke-pandan-edge" stroke-width="2" opacity=".5"/><ellipse cx="120" cy="45" rx="9" ry="13" class="fill-card stroke-pandan-edge" stroke-width="3"/><circle cx="120" cy="45" r="3.5" class="fill-gula"/></g><g transform="rotate(4 80 66)"><rect x="40" y="54" width="86" height="30" rx="12" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><path d="M56 58v22M72 58v22M88 58v22M104 58v22" class="stroke-pandan-edge" stroke-width="2" opacity=".5"/><ellipse cx="126" cy="69" rx="9" ry="13" class="fill-card stroke-pandan-edge" stroke-width="3"/><circle cx="126" cy="69" r="3.5" class="fill-gula"/></g>`,
+        risoles: `${plate}<g transform="rotate(-10 80 48)"><rect x="36" y="32" width="88" height="30" rx="15" class="fill-martabak stroke-martabak-edge" stroke-width="3"/></g><g transform="rotate(6 80 66)"><rect x="38" y="54" width="88" height="30" rx="15" class="fill-martabak stroke-martabak-edge" stroke-width="3"/></g><g class="fill-martabak-edge"><circle cx="52" cy="50" r="2"/><circle cx="66" cy="42" r="1.8"/><circle cx="82" cy="46" r="2.2"/><circle cx="98" cy="38" r="1.8"/><circle cx="108" cy="46" r="2"/><circle cx="56" cy="66" r="2"/><circle cx="72" cy="72" r="1.8"/><circle cx="88" cy="66" r="2.2"/><circle cx="104" cy="74" r="2"/><circle cx="116" cy="68" r="1.8"/></g>`,
+        pisang: `${plate}<g transform="rotate(-14 80 50)"><ellipse cx="80" cy="44" rx="40" ry="13" class="fill-martabak stroke-gula" stroke-width="3"/><path d="M58 40c6 4 14 5 22 3M88 48c6-1 12-4 16-8" class="stroke-martabak-edge" stroke-width="3" fill="none" stroke-linecap="round"/></g><g transform="rotate(8 80 64)"><ellipse cx="82" cy="66" rx="40" ry="13" class="fill-martabak stroke-gula" stroke-width="3"/><path d="M60 64c6 4 14 5 22 3M92 70c6-1 12-4 16-8" class="stroke-martabak-edge" stroke-width="3" fill="none" stroke-linecap="round"/></g>`,
+        cendol: `<ellipse cx="80" cy="91" rx="34" ry="5" class="fill-border"/><path d="M93 4 86 34" class="stroke-cendol-edge" stroke-width="5" stroke-linecap="round"/><path d="M60 14h40l-5 76H65z" class="fill-card"/><path d="M64.2 70h31.6l-1.2 18H65.4z" class="fill-gula"/><g class="fill-pandan"><rect x="66" y="56" width="10" height="5" rx="2.5" transform="rotate(-20 71 58)"/><rect x="80" y="60" width="10" height="5" rx="2.5" transform="rotate(15 85 62)"/><rect x="70" y="64" width="10" height="5" rx="2.5" transform="rotate(10 75 66)"/><rect x="84" y="51" width="10" height="5" rx="2.5" transform="rotate(-10 89 53)"/><rect x="74" y="48" width="9" height="5" rx="2.5" transform="rotate(25 78 50)"/></g><path d="M60 14h40l-5 76H65z" class="fill-none stroke-cendol-edge" stroke-width="3" stroke-linejoin="round"/><path d="M61 28h38" class="stroke-cendol-edge" stroke-width="2" opacity=".5"/>`,
+        onde: `${plate}<circle cx="56" cy="58" r="24" class="fill-martabak stroke-martabak-edge" stroke-width="3"/><circle cx="104" cy="58" r="24" class="fill-martabak stroke-martabak-edge" stroke-width="3"/><circle cx="80" cy="44" r="24" class="fill-martabak stroke-martabak-edge" stroke-width="3"/><g class="fill-white stroke-martabak-edge" stroke-width="1"><ellipse cx="46" cy="52" rx="2.6" ry="1.5" transform="rotate(-30 46 52)"/><ellipse cx="58" cy="46" rx="2.6" ry="1.5" transform="rotate(20 58 46)"/><ellipse cx="50" cy="66" rx="2.6" ry="1.5" transform="rotate(40 50 66)"/><ellipse cx="64" cy="62" rx="2.6" ry="1.5" transform="rotate(-10 64 62)"/><ellipse cx="96" cy="52" rx="2.6" ry="1.5" transform="rotate(25 96 52)"/><ellipse cx="110" cy="48" rx="2.6" ry="1.5" transform="rotate(-35 110 48)"/><ellipse cx="114" cy="64" rx="2.6" ry="1.5" transform="rotate(15 114 64)"/><ellipse cx="100" cy="68" rx="2.6" ry="1.5" transform="rotate(-20 100 68)"/><ellipse cx="72" cy="38" rx="2.6" ry="1.5" transform="rotate(30 72 38)"/><ellipse cx="86" cy="34" rx="2.6" ry="1.5" transform="rotate(-25 86 34)"/><ellipse cx="88" cy="50" rx="2.6" ry="1.5" transform="rotate(10 88 50)"/><ellipse cx="74" cy="52" rx="2.6" ry="1.5" transform="rotate(-40 74 52)"/></g>`,
+        dadar: `${plate}<g transform="rotate(-6 80 50)"><rect x="30" y="30" width="92" height="30" rx="15" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><path d="M60 31c-4 9-4 19 0 28M88 31c-4 9-4 19 0 28" class="stroke-pandan-edge" stroke-width="2" fill="none" opacity=".5"/><ellipse cx="122" cy="45" rx="8" ry="13" class="fill-gula stroke-pandan-edge" stroke-width="3"/></g><g transform="rotate(5 80 68)"><rect x="34" y="54" width="92" height="30" rx="15" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><path d="M64 55c-4 9-4 19 0 28M92 55c-4 9-4 19 0 28" class="stroke-pandan-edge" stroke-width="2" fill="none" opacity=".5"/><ellipse cx="126" cy="69" rx="8" ry="13" class="fill-gula stroke-pandan-edge" stroke-width="3"/></g>`,
+        kelapa: `<ellipse cx="80" cy="91" rx="40" ry="5" class="fill-border"/><path d="M96 6 88 40" class="stroke-cendol-edge" stroke-width="5" stroke-linecap="round"/><path d="M46 46a34 38 0 0 0 68 0z" class="fill-pandan stroke-pandan-edge" stroke-width="3" stroke-linejoin="round"/><path d="M58 64c6 6 14 8 22 8" class="stroke-pandan-edge" stroke-width="2.5" fill="none" stroke-linecap="round" opacity=".6"/><ellipse cx="80" cy="46" rx="34" ry="9" class="fill-card stroke-pandan-edge" stroke-width="3"/><ellipse cx="80" cy="46" rx="22" ry="5" class="fill-cendol"/>`,
+      };
+
+      const snacks = [
+        { id: 'klepon', name: 'Klepon', note: 'Pandan rice balls with palm sugar inside, 5 pcs', price: 12000, category: 'kue', sticker: ['Favorit', 'bg-martabak text-martabak-foreground ring-martabak-edge -rotate-3'] },
+        { id: 'lumpur', name: 'Kue lumpur', note: 'Coconut custard cakes with a raisin, 4 pcs', price: 15000, category: 'kue' },
+        { id: 'risoles', name: 'Risoles', note: 'Crisp rolls with chicken ragout, 3 pcs', price: 18000, category: 'goreng' },
+        { id: 'lemper', name: 'Lemper', note: 'Sticky rice and chicken in banana leaf, 4 pcs', price: 14000, category: 'kue', sticker: ['Baru', 'bg-pandan text-pandan-foreground ring-pandan-edge rotate-2'] },
+        { id: 'pisang', name: 'Pisang goreng', note: 'Plantain fried in a crisp batter, 4 pcs', price: 10000, category: 'goreng' },
+        { id: 'dadar', name: 'Dadar gulung', note: 'Pandan crêpes with sweet coconut, 3 pcs', price: 13000, category: 'kue' },
+        { id: 'onde', name: 'Onde-onde', note: 'Sesame balls with sweet mung bean, 4 pcs', price: 12000, category: 'goreng' },
+        { id: 'cendol', name: 'Es cendol', note: 'Pandan jelly, coconut milk and palm sugar, 1 glass', price: 15000, category: 'minum' },
+        { id: 'kelapa', name: 'Es kelapa muda', note: 'Young coconut on ice with a little syrup, 1 glass', price: 12000, category: 'minum' },
+      ];
+      const categories = [
+        { id: 'kue', name: 'Kue basah', dot: 'bg-pandan' },
+        { id: 'goreng', name: 'Gorengan', dot: 'bg-martabak' },
+        { id: 'minum', name: 'Drinks', dot: 'bg-cendol' },
+      ];
+      const order = { klepon: 2, risoles: 1, cendol: 1 };
+      const freeFrom = 75000;
+      const deliveryFee = 8000;
+      let mode = 'delivery';
+      let lastAdded = 'klepon';
+
+      const $ = (id) => document.getElementById(id);
+      const rupiah = (value) => `Rp${value.toLocaleString('id-ID')}`;
+      const addButton = (s) =>
+        `<button type="button" data-add="${s.id}" aria-label="Add ${s.name} to your order" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge ${press} hover:bg-primary-hover">${plus}</button>`;
+      const stepper = (s) =>
+        `<div role="group" aria-label="Quantity of ${s.name}" class="inline-flex h-11 items-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge"><button type="button" data-step="-1" data-id="${s.id}" aria-label="Remove one ${s.name}" class="inline-flex size-10 items-center justify-center rounded-l-sm transition hover:bg-primary-hover focus-visible:outline-primary-foreground focus-visible:-outline-offset-4">${minus}</button><output class="min-w-6 text-center type-ui tabular-nums">${order[s.id]}</output><button type="button" data-step="1" data-id="${s.id}" aria-label="Add one ${s.name}" ${order[s.id] >= 9 ? 'disabled' : ''} class="inline-flex size-10 items-center justify-center rounded-r-sm transition hover:bg-primary-hover focus-visible:outline-primary-foreground focus-visible:-outline-offset-4 disabled:pointer-events-none disabled:opacity-40">${plus}</button></div>`;
+      const action = (s) => (order[s.id] ? stepper(s) : addButton(s));
+
+      $('categories').innerHTML =
+        `<button type="button" aria-pressed="true" data-category="all" class="${chip}">All</button>` +
+        categories.map((c) => `<button type="button" aria-pressed="false" data-category="${c.id}" class="${chip}"><span class="size-2.5 rounded-full ${c.dot}"></span>${c.name}</button>`).join('');
+
+      $('products').innerHTML = snacks
+        .map(
+          (s) => `<article data-snack="${s.id}" data-category="${s.category}" class="flex flex-col rounded-3xl border-2 border-border bg-card p-2 pb-3 ledge-lg-border">
+            <div class="relative flex aspect-[16/10] items-center justify-center rounded-xl bg-muted"><svg viewBox="0 0 160 100" class="h-24" aria-hidden="true">${art[s.id]}</svg>${s.sticker ? `<span class="${sticker} absolute top-2.5 left-2.5 ${s.sticker[1]}">${s.sticker[0]}</span>` : ''}</div>
+            <div class="flex flex-1 flex-col px-2 pt-3">
+              <h3 class="type-title">${s.name}</h3>
+              <p class="mt-0.5 type-small text-muted-foreground">${s.note}</p>
+              <div class="mt-auto flex items-center justify-between gap-2 pt-3"><span class="type-price">${rupiah(s.price)}</span><div data-slot>${action(s)}</div></div>
+            </div>
+          </article>`,
+        )
+        .join('');
+
+      const stars = [1, 2, 3, 4, 5]
+        .map(
+          (n) => `<label class="cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring"><input type="radio" name="last-order" value="${n}" class="sr-only" /><span class="sr-only">${n} ${n === 1 ? 'star' : 'stars'}</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" class="size-8 text-input transition" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg></label>`,
+        )
+        .join('');
+      $('rating').insertAdjacentHTML('beforeend', stars);
+
+      function renderOrder() {
+        const lines = snacks.filter((s) => order[s.id]);
+        const count = lines.reduce((sum, s) => sum + order[s.id], 0);
+        const subtotal = lines.reduce((sum, s) => sum + order[s.id] * s.price, 0);
+        const fee = mode === 'delivery' && subtotal < freeFrom ? deliveryFee : 0;
+        $('filled').hidden = !count;
+        $('empty').hidden = !!count;
+        $('order-count').textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+        $('lines').innerHTML = lines
+          .map((s) => `<li class="${row}"><span>${s.name} <span class="text-muted-foreground">×${order[s.id]}</span></span><span>${rupiah(order[s.id] * s.price)}</span></li>`)
+          .join('');
+        $('free').hidden = mode !== 'delivery';
+        const reached = subtotal >= freeFrom;
+        $('free-text').textContent = reached ? 'Free delivery on this order' : `Add ${rupiah(freeFrom - subtotal)} for free delivery`;
+        $('free-fill').style.width = `${Math.min(100, (subtotal / freeFrom) * 100)}%`;
+        $('free-bar').setAttribute('aria-valuenow', Math.min(subtotal, freeFrom));
+        $('subtotal').textContent = rupiah(subtotal);
+        $('fee').textContent = mode === 'pickup' ? 'None' : fee ? rupiah(fee) : 'Free';
+        $('total').textContent = rupiah(subtotal + fee);
+        $('place').textContent = `Place order · ${rupiah(subtotal + fee)}`;
+      }
+
+      function setCount(id, value, focusStep) {
+        order[id] = Math.max(0, Math.min(9, value));
+        if (!order[id]) delete order[id];
+        const snack = snacks.find((s) => s.id === id);
+        const slot = document.querySelector(`[data-snack="${id}"] [data-slot]`);
+        const hadFocus = slot.contains(document.activeElement);
+        slot.innerHTML = action(snack);
+        if (hadFocus) slot.querySelector(focusStep && order[id] ? `[data-step="${focusStep}"]` : 'button').focus();
+        renderOrder();
+      }
+
+      function showToast(text) {
+        $('toast-text').textContent = text;
+        $('undo').hidden = false;
+        $('toast').hidden = false;
+      }
+
+      $('products').addEventListener('click', (event) => {
+        const add = event.target.closest('[data-add]');
+        const step = event.target.closest('[data-step]');
+        if (add) {
+          lastAdded = add.dataset.add;
+          setCount(lastAdded, 1, '1');
+          showToast(`${snacks.find((s) => s.id === lastAdded).name} added to your order`);
+        }
+        if (step) {
+          const id = step.dataset.id;
+          setCount(id, (order[id] ?? 0) + Number(step.dataset.step), step.dataset.step);
+          if (step.dataset.step === '1') {
+            lastAdded = id;
+            showToast(`${snacks.find((s) => s.id === id).name} added to your order`);
+          }
+        }
+      });
+
+      $('undo').addEventListener('click', () => {
+        if (lastAdded) setCount(lastAdded, (order[lastAdded] ?? 0) - 1);
+        lastAdded = null;
+        $('toast').hidden = true;
+      });
+
+      $('categories').addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button) return;
+        const chips = [...$('categories').children];
+        const all = chips[0];
+        if (button === all) chips.forEach((b) => b.setAttribute('aria-pressed', b === all));
+        else {
+          button.setAttribute('aria-pressed', button.getAttribute('aria-pressed') !== 'true');
+          const any = chips.slice(1).some((b) => b.getAttribute('aria-pressed') === 'true');
+          all.setAttribute('aria-pressed', !any);
+        }
+        filter();
+      });
+
+      function filter() {
+        const pressed = [...$('categories').children].filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.category);
+        const query = $('search').value.trim().toLowerCase();
+        let shown = 0;
+        for (const card of $('products').children) {
+          const snack = snacks.find((s) => s.id === card.dataset.snack);
+          const visible = (pressed.includes('all') || pressed.includes(snack.category)) && (!query || `${snack.name} ${snack.note}`.toLowerCase().includes(query));
+          card.hidden = !visible;
+          shown += visible;
+        }
+        $('no-match').hidden = shown > 0;
+        $('menu-count').textContent = shown === snacks.length ? `${snacks.length} snacks, made this morning` : `${shown} of ${snacks.length} snacks`;
+      }
+      $('search').addEventListener('input', filter);
+      $('clear-search').addEventListener('click', () => {
+        $('search').value = '';
+        $('categories').children[0].click();
+        $('search').focus();
+      });
+
+      document.querySelector('[role=tablist]').addEventListener('click', (event) => {
+        const tab = event.target.closest('[role=tab]');
+        if (!tab) return;
+        for (const t of tab.parentElement.children) t.setAttribute('aria-selected', t === tab);
+        mode = tab.dataset.mode;
+        const delivery = mode === 'delivery';
+        $('where-label').textContent = delivery ? 'Deliver to' : 'Pick up at';
+        $('where').textContent = delivery ? 'Jl. Sukajadi 41, Bandung' : 'Pasar Kosambi, stall 12';
+        $('when').textContent = delivery ? 'Arrives in 30 to 45 min' : 'Ready in about 15 min';
+        $('change').hidden = !delivery;
+        renderOrder();
+      });
+
+      document.querySelector('[role=switch]').addEventListener('click', (event) => {
+        const toggle = event.currentTarget;
+        toggle.setAttribute('aria-checked', toggle.getAttribute('aria-checked') !== 'true');
+      });
+
+      $('save-shop').addEventListener('click', (event) => {
+        const button = event.currentTarget;
+        const saved = button.getAttribute('aria-pressed') !== 'true';
+        button.setAttribute('aria-pressed', saved);
+        showToast(saved ? 'Jajan Bu Ratna saved to your shops' : 'Removed from your shops');
+        $('undo').hidden = true;
+      });
+
+      $('rating').addEventListener('change', (event) => {
+        $('rating-text').textContent = `Thanks, ${event.target.value} of 5`;
+      });
+
+      $('place').addEventListener('click', () => {
+        showToast(`Order sent. Bu Ratna is packing it now.`);
+        $('undo').hidden = true;
+      });
+
+      renderOrder();
+    </script>
+  </body>
+</html>

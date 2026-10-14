@@ -10,10 +10,11 @@ A playful design system for consumer apps: food ordering, pets, learning, kids, 
 | --- | --- |
 | `jajan.css` | Tailwind CSS v4 theme: color tokens (light and dark), radii, ledge shadows, type utilities, the `ledge-*`, slider, checkbox, radio and rating utilities. Token names follow shadcn/ui. |
 | `DESIGN.md` | The rules and the component recipes, in the [design.md](https://github.com/google-labs-code/design.md) format. |
-| `preview/index.html` | Component gallery built with the theme: a snack shop's kit. Has a dark mode switch, category filters, and copy and reset buttons per component. |
+| `preview/index.html` | Component gallery built with the theme: every component with neutral content, its variants and its states. Has a dark mode switch, category filters, and copy and reset buttons per component. |
+| `preview/demo.html` | An example screen built only from the recipes: the order page of a snack stall, with a menu, a cart and a rating. Light and dark follow the `dark` class. |
 | `CHANGELOG.md` | What changed in each version. |
 
-Figma: [Jajan Design System](https://www.figma.com/design/hL69pjHba5YSr9C127KJT7) (pages Cover, Foundations and Components).
+Figma: [Jajan Design System](https://www.figma.com/design/hL69pjHba5YSr9C127KJT7) (pages Cover, Foundations, Components and Example; Example holds the demo screen in light and dark).
 
 ## Use it in a project
 
@@ -34,11 +35,11 @@ The theme removes the default Tailwind color palette on purpose. Use the semanti
 
 ```sh
 pnpm install
-pnpm build   # writes preview/preview.css from the classes in preview/index.html
+pnpm build   # writes preview/preview.css from the classes in preview/index.html and preview/demo.html
 pnpm dev     # same, watching for changes
 ```
 
-Then open `preview/index.html` in a browser. Copy needs a secure context, so serve the folder (`python3 -m http.server -d preview`) if the clipboard button does nothing over `file://`.
+Then open `preview/index.html` (the gallery) or `preview/demo.html` (the example screen) in a browser. Copy needs a secure context, so serve the folder (`python3 -m http.server -d preview`) if the clipboard button does nothing over `file://`.
 
 ## Versions
 
