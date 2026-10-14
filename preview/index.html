@@ -24,10 +24,9 @@
           class="inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition hover:bg-accent active:translate-y-1 active:shadow-none"
         ></button>
       </div>
-      <div id="filters" class="-mx-1 mt-4 flex gap-2.5 overflow-x-auto px-1 pt-1 pb-3" role="group" aria-label="Filter components"></div>
     </header>
 
-    <main id="gallery" class="mx-auto grid max-w-7xl grid-cols-1 gap-5 p-4 min-[480px]:grid-cols-2 lg:grid-cols-3"></main>
+    <main id="gallery" class="mx-auto flex max-w-7xl flex-col gap-10 px-4 pt-6 pb-10"></main>
 
     <script>
       const icon = (paths, size = 20) =>
@@ -219,7 +218,6 @@
       ];
 
       const gallery = document.getElementById('gallery');
-      const filters = document.getElementById('filters');
       const theme = document.getElementById('theme');
       const syncSliders = (root) =>
         root.querySelectorAll('input[type=range]').forEach((el) => {
@@ -232,21 +230,24 @@
       };
 
       paintTheme();
-      filters.innerHTML = ['All', 'Actions', 'Inputs', 'Status', 'Content']
-        .map((name, i) => `<button type="button" aria-pressed="${i === 0}" class="${chip}">${name}</button>`)
-        .join('');
-      gallery.innerHTML = components
-        .map(
-          (c, i) => `<article data-index="${i}" data-category="${c.category}" class="flex aspect-[9/10] flex-col self-stretch rounded-3xl border-2 border-border bg-card ledge-lg-border">
+      // Cards grouped by category, in the order each category first appears.
+      const categories = [...new Set(components.map((c) => c.category))];
+      const card = (c, i) => `<article data-index="${i}" data-category="${c.category}" class="flex aspect-[9/10] flex-col self-stretch rounded-3xl border-2 border-border bg-card ledge-lg-border">
             <div data-demo class="flex flex-1 items-center justify-center px-6 pt-6">${c.html}</div>
             <footer class="flex h-16 items-center justify-between pr-3.5 pb-1 pl-6">
-              <h2 class="type-ui">${c.name}</h2>
+              <h3 class="type-ui">${c.name}</h3>
               <div class="flex gap-0.5">
                 ${c.stateful ? `<button type="button" data-reset aria-label="Reset ${c.name}" class="${quiet}">${icons.reset}</button>` : ''}
                 <button type="button" data-copy aria-label="Copy ${c.name} markup" class="${quiet}">${icons.copy}</button>
               </div>
             </footer>
-          </article>`,
+          </article>`;
+      gallery.innerHTML = categories
+        .map(
+          (category) => `<section aria-labelledby="group-${category.toLowerCase()}">
+          <h2 id="group-${category.toLowerCase()}" class="type-h3">${category}</h2>
+          <div class="mt-5 grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-3">${components.map((c, i) => (c.category === category ? card(c, i) : '')).join('')}</div>
+        </section>`,
         )
         .join('');
       syncSliders(gallery);
@@ -256,15 +257,6 @@
         paintTheme();
       });
       new MutationObserver(paintTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-      filters.addEventListener('click', (event) => {
-        const button = event.target.closest('button');
-        if (!button) return;
-        for (const b of filters.children) b.setAttribute('aria-pressed', b === button);
-        for (const card of gallery.children) {
-          card.hidden = button.textContent !== 'All' && card.dataset.category !== button.textContent;
-        }
-      });
 
       gallery.addEventListener('input', (event) => {
         if (event.target.type === 'range') syncSliders(event.target.parentElement);

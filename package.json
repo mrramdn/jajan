@@ -1,6 +1,6 @@
 {
   "name": "jajan",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Jajan: a playful design system for consumer apps, for Tailwind CSS v4, DESIGN.md and Figma",
   "scripts": {

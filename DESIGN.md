@@ -389,7 +389,7 @@ Rules:
 ## Layout
 
 - Spacing uses the Tailwind 4px unit. Common steps: 8 (inside a control), 12 (between stacked options), 16 (page margin, inside a text field), 20 (between cards, card padding), 24 (button padding).
-- The page is `bg-background`. Content lives on white cards; the cream page is only ever a ground, with the page title and filters directly on it.
+- The page is `bg-background`. Content lives on white cards; the cream page is only ever a ground, with the page title and section headings directly on it.
 - Cards form a grid with `gap-5` and `p-4` page margins: one column on phones, two from 480px, three from 1024px. Gallery cards keep at least a 9:10 ratio (`aspect-[9/10]`) and stretch to the tallest card in their row (`self-stretch`).
 - Big targets: default controls are 52px tall (`h-13`), small buttons and icon buttons 44px, chips 40px, toggles 72 by 40px, checkboxes and radios 24px. Never under 40px for anything a finger taps.
 - Inside a card, the content is centered and the footer holds the title on the left and quiet icon buttons on the right.

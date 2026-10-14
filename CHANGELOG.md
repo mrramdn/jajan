@@ -3,6 +3,13 @@
 Jajan uses semantic versions. While it is in beta, a minor version adds or changes tokens, components or rules,
 and a patch fixes them. Every version is a git tag (`v0.1.0`) and an entry in the design site's record.
 
+## 0.2.1 (2026-10-15)
+
+- The gallery has no filter row under the header any more. Its 24 cards are grouped under category headings
+  (Content, Actions, Inputs, Status) in `type-h3`, with 40px between groups and 20px under each heading; card
+  names are `h3`. Copy, reset and every control work as before.
+- Figma: the filter chip row is gone from `Gallery/Light` and `Gallery/Dark`.
+
 ## 0.2.0 (2026-10-14)
 
 A blank component sheet and an example screen.

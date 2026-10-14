@@ -10,7 +10,7 @@ A playful design system for consumer apps: food ordering, pets, learning, kids, 
 | --- | --- |
 | `jajan.css` | Tailwind CSS v4 theme: color tokens (light and dark), radii, ledge shadows, type utilities, the `ledge-*`, slider, checkbox, radio and rating utilities. Token names follow shadcn/ui. |
 | `DESIGN.md` | The rules and the component recipes, in the [design.md](https://github.com/google-labs-code/design.md) format. |
-| `preview/index.html` | Component gallery built with the theme: every component with neutral content, its variants and its states. Has a dark mode switch, category filters, and copy and reset buttons per component. |
+| `preview/index.html` | Component gallery built with the theme: every component with neutral content, its variants and its states. Cards are grouped under category headings. Has a dark mode switch and copy and reset buttons per component. |
 | `preview/demo.html` | An example screen built only from the recipes: the order page of a snack stall, with a menu, a cart and a rating. Light and dark follow the `dark` class. |
 | `CHANGELOG.md` | What changed in each version. |
 
