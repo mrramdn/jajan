@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jajan</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="preview.css" />
+  </head>
+  <body>
+    <header class="mx-auto max-w-7xl px-4 pt-5 pb-1">
+      <div class="flex items-center justify-between">
+        <p class="flex items-start gap-2">
+          <span class="type-h2 leading-9">jajan</span>
+          <span class="type-caption mt-1.5 text-muted-foreground">Beta</span>
+        </p>
+        <button
+          id="theme"
+          type="button"
+          aria-label="Switch between light and dark"
+          class="inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input transition hover:bg-accent active:translate-y-1 active:shadow-none"
+        ></button>
+      </div>
+      <div id="filters" class="-mx-1 mt-4 flex gap-2.5 overflow-x-auto px-1 pt-1 pb-3" role="group" aria-label="Filter components"></div>
+    </header>
+
+    <main id="gallery" class="mx-auto grid max-w-7xl grid-cols-1 gap-5 p-4 min-[480px]:grid-cols-2 lg:grid-cols-3"></main>
+
+    <script>
+      const icon = (paths, size = 20) =>
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+      const icons = {
+        copy: icon('<rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>'),
+        reset: icon('<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>'),
+        check: icon('<path d="M20 6 9 17l-5-5"/>'),
+        sun: icon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>'),
+        moon: icon('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'),
+        plus: icon('<path d="M5 12h14"/><path d="M12 5v14"/>'),
+        minus: icon('<path d="M5 12h14"/>'),
+        heart: icon('<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>'),
+        bell: icon('<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>'),
+        basket: icon('<path d="m15 11-1 9"/><path d="m19 11-4-7"/><path d="M2 11h20"/><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"/><path d="M4.5 15.5h15"/><path d="m5 11 4-7"/><path d="m9 11 1 9"/>'),
+        chevron: icon('<path d="m9 18 6-6-6-6"/>'),
+      };
+      const star =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" class="size-8 text-input transition" aria-hidden="true"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>';
+
+      // Shared class strings, the same ones DESIGN.md quotes.
+      const press = 'transition active:translate-y-1 active:shadow-none';
+      const button = `inline-flex h-13 items-center justify-center gap-2 rounded-lg border-2 px-6 text-base font-bold ${press} disabled:pointer-events-none disabled:opacity-40`;
+      const primary = `${button} border-primary-edge bg-primary text-primary-foreground ledge-primary-edge hover:bg-primary-hover`;
+      const secondary = `${button} border-secondary-edge bg-secondary text-secondary-foreground ledge-secondary-edge hover:bg-secondary-edge/40`;
+      const ghost = `${button} border-transparent text-foreground hover:bg-accent`;
+      const smallSecondary = `inline-flex h-11 items-center justify-center gap-2 rounded-lg border-2 border-secondary-edge bg-secondary px-4 type-ui text-secondary-foreground ledge-secondary-edge ${press} hover:bg-secondary-edge/40`;
+      const chip = `inline-flex h-10 shrink-0 items-center gap-2 rounded-md border-2 border-input bg-card px-4 type-ui text-foreground ledge-input ${press} hover:bg-accent aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:text-secondary-foreground aria-pressed:ledge-primary aria-pressed:hover:bg-secondary`;
+      const raised = `inline-flex size-11 items-center justify-center rounded-md border-2 border-input bg-card text-foreground ledge-input ${press} hover:bg-accent`;
+      const quiet = 'inline-flex size-10 items-center justify-center rounded-md text-muted-foreground transition hover:bg-accent hover:text-foreground';
+      const radio = 'size-6 appearance-none rounded-full border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-radio';
+      const checkbox = 'size-6 appearance-none rounded-xs border-2 border-input bg-card transition checked:border-primary-edge checked:bg-primary jajan-check';
+      const option = 'flex items-center gap-3 type-small';
+      const tab = 'h-10 rounded-sm border-2 border-transparent px-4 type-ui text-muted-foreground transition hover:text-foreground aria-selected:border-input aria-selected:bg-card aria-selected:text-foreground aria-selected:ledge-sm-input';
+      const badge = 'inline-flex h-8 items-center gap-2 rounded-md border-2 border-border bg-muted px-3 type-caption';
+      const sticker = 'inline-flex h-9 items-center rounded-md border-[3px] border-card px-3 type-caption ring-2';
+      const avatar = 'inline-flex size-11 items-center justify-center rounded-md border-2 type-ui ring-2 ring-card';
+      const row = 'flex h-14 items-center justify-between gap-3 px-4 type-ui tabular-nums';
+      const stepperButton = 'inline-flex size-12 items-center justify-center text-foreground transition hover:bg-accent disabled:pointer-events-none disabled:opacity-40';
+      const toggle = `group relative h-10 w-18 rounded-lg border-2 border-input bg-muted ledge-input ${press} aria-checked:border-primary-edge aria-checked:bg-primary aria-checked:ledge-primary-edge disabled:opacity-40`;
+      const thumb = 'absolute top-1 left-1 size-7 rounded-xs border-2 border-input bg-card transition-transform duration-200 ease-bounce group-aria-checked:translate-x-8 group-aria-checked:border-primary-edge';
+      const ratingLabel = 'cursor-pointer rounded-xs has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring';
+
+      const klepon = `<svg viewBox="0 0 160 100" class="h-24" aria-hidden="true"><ellipse cx="80" cy="78" rx="64" ry="12" class="fill-card stroke-border" stroke-width="3"/><circle cx="52" cy="54" r="26" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><circle cx="108" cy="54" r="26" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><circle cx="80" cy="60" r="27" class="fill-pandan stroke-pandan-edge" stroke-width="3"/><g class="fill-white"><circle cx="42" cy="46" r="2.5"/><circle cx="56" cy="40" r="2"/><circle cx="48" cy="62" r="2"/><circle cx="34" cy="56" r="1.8"/><circle cx="100" cy="42" r="2.5"/><circle cx="116" cy="50" r="2"/><circle cx="104" cy="64" r="1.8"/><circle cx="124" cy="60" r="2"/><circle cx="70" cy="50" r="2.5"/><circle cx="84" cy="44" r="2"/><circle cx="92" cy="58" r="2.2"/><circle cx="74" cy="70" r="2"/><circle cx="86" cy="76" r="1.8"/><circle cx="64" cy="64" r="1.6"/></g></svg>`;
+      const basketArt = `<svg viewBox="0 0 120 96" class="h-24" aria-hidden="true"><ellipse cx="60" cy="90" rx="42" ry="5" class="fill-muted"/><path d="M38 40C38 16 82 16 82 40" class="stroke-gula-edge" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M22 42h76l-8 42q-30 6-60 0z" class="fill-gula stroke-gula-edge" stroke-width="3" stroke-linejoin="round"/><path d="M29 56h62M27 70h58" class="stroke-gula-edge" stroke-width="2.5" opacity=".45"/><rect x="18" y="36" width="84" height="12" rx="6" class="fill-gula-edge"/></svg>`;
+
+      const components = [
+        {
+          name: 'Product card',
+          category: 'Content',
+          stateful: true,
+          html: `<article class="w-56 rounded-3xl border-2 border-border bg-card p-2 pb-3 ledge-lg-border"><div class="flex aspect-[16/10] items-center justify-center rounded-xl bg-muted">${klepon}</div><div class="px-2 pt-3"><h3 class="type-title">Klepon <span class="type-small text-muted-foreground">5 pcs</span></h3><div class="mt-3 flex items-center justify-between"><span class="type-price">Rp12.000</span><button type="button" data-add aria-label="Add Klepon to basket" class="inline-flex size-11 items-center justify-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge ${press} hover:bg-primary-hover">${icons.plus}</button></div></div></article>`,
+        },
+        {
+          name: 'Button',
+          category: 'Actions',
+          html: `<div class="flex flex-col items-center gap-4"><button type="button" class="${primary}">${icons.basket}Add to basket</button><button type="button" class="${secondary}">Save for later</button><button type="button" class="${ghost}">Not now</button></div>`,
+        },
+        {
+          name: 'Category chips',
+          category: 'Inputs',
+          stateful: true,
+          html: `<div role="group" aria-label="Categories" data-chips="multi" class="flex flex-wrap justify-center gap-2.5"><button type="button" aria-pressed="true" class="${chip}"><span class="size-2.5 rounded-full bg-pandan"></span>Kue basah</button><button type="button" aria-pressed="false" class="${chip}"><span class="size-2.5 rounded-full bg-martabak"></span>Gorengan</button><button type="button" aria-pressed="false" class="${chip}"><span class="size-2.5 rounded-full bg-cendol"></span>Drinks</button><button type="button" aria-pressed="true" class="${chip}"><span class="size-2.5 rounded-full bg-gula"></span>Martabak</button></div>`,
+        },
+        {
+          name: 'Toggle',
+          category: 'Inputs',
+          stateful: true,
+          html: `<div class="flex w-full max-w-64 flex-col gap-5"><div class="flex items-center justify-between gap-4"><span id="toggle-sugar" class="type-ui">Less sugar</span><button type="button" role="switch" aria-checked="true" aria-labelledby="toggle-sugar" class="${toggle}"><span class="${thumb}"></span></button></div><div class="flex items-center justify-between gap-4"><span id="toggle-coconut" class="type-ui">Extra grated coconut</span><button type="button" role="switch" aria-checked="false" aria-labelledby="toggle-coconut" class="${toggle}"><span class="${thumb}"></span></button></div></div>`,
+        },
+        {
+          name: 'Stepper',
+          category: 'Actions',
+          stateful: true,
+          html: `<div class="flex flex-col items-center gap-3"><div role="group" aria-label="Quantity of Klepon" data-stepper data-price="12000" class="inline-flex h-13 items-center rounded-lg border-2 border-input bg-card ledge-input"><button type="button" data-step="-1" aria-label="Remove one" class="${stepperButton} rounded-l-md">${icons.minus}</button><output class="min-w-10 text-center type-title tabular-nums">2</output><button type="button" data-step="1" aria-label="Add one" class="${stepperButton} rounded-r-md">${icons.plus}</button></div><p class="type-small text-muted-foreground">Klepon, 5 pcs · <output data-total class="type-price text-foreground">Rp24.000</output></p></div>`,
+        },
+        {
+          name: 'Chip',
+          category: 'Inputs',
+          stateful: true,
+          html: `<div role="group" aria-label="Filter" data-chips="single" class="flex flex-wrap justify-center gap-2.5"><button type="button" aria-pressed="true" class="${chip}">All</button><button type="button" aria-pressed="false" class="${chip}">Sweet</button><button type="button" aria-pressed="false" class="${chip}">Savory</button><button type="button" aria-pressed="false" class="${chip}">Under Rp10.000</button></div>`,
+        },
+        {
+          name: 'Slider',
+          category: 'Inputs',
+          stateful: true,
+          html: `<label class="block w-full max-w-60"><span class="flex justify-between type-ui">Sweetness<output class="text-muted-foreground tabular-nums">60%</output></span><input type="range" min="0" max="100" value="60" class="jajan-slider mt-2" /></label>`,
+        },
+        {
+          name: 'Single selection',
+          category: 'Inputs',
+          stateful: true,
+          html: `<fieldset class="space-y-3"><legend class="type-ui mb-3">How do you want it?</legend><label class="${option}"><input type="radio" name="fulfilment" checked class="${radio}" />Pickup at 16:00</label><label class="${option}"><input type="radio" name="fulfilment" class="${radio}" />Delivery, 30 to 45 min</label><label class="${option}"><input type="radio" name="fulfilment" class="${radio}" />Eat at the stall</label></fieldset>`,
+        },
+        {
+          name: 'Checkbox',
+          category: 'Inputs',
+          stateful: true,
+          html: `<fieldset class="space-y-3"><legend class="type-ui mb-3">Extras</legend><label class="${option}"><input type="checkbox" checked class="${checkbox}" />Extra grated coconut</label><label class="${option}"><input type="checkbox" class="${checkbox}" />Palm-sugar syrup on the side</label><label class="${option}"><input type="checkbox" class="${checkbox}" />Cutlery</label></fieldset>`,
+        },
+        {
+          name: 'Text field',
+          category: 'Inputs',
+          stateful: true,
+          html: `<label class="block w-full max-w-64"><span class="type-ui">Note for the seller</span><input type="text" placeholder="Extra grated coconut" class="mt-2 h-13 w-full rounded-lg border-2 border-input bg-card px-4 type-body text-foreground ledge-input placeholder:text-muted-foreground disabled:opacity-40" /></label>`,
+        },
+        {
+          name: 'Segmented',
+          category: 'Inputs',
+          stateful: true,
+          html: `<div role="tablist" aria-label="Fulfilment" class="inline-flex rounded-lg border-2 border-border bg-muted p-1"><button type="button" role="tab" aria-selected="true" class="${tab}">Pickup</button><button type="button" role="tab" aria-selected="false" class="${tab}">Delivery</button><button type="button" role="tab" aria-selected="false" class="${tab}">Dine in</button></div>`,
+        },
+        {
+          name: 'Badge',
+          category: 'Status',
+          html: `<div class="flex flex-col items-start gap-3"><span class="${badge}"><span class="size-2.5 rounded-full bg-success"></span>Open until 17:00</span><span class="${badge}"><span class="size-2.5 rounded-full bg-warning"></span>Few left</span><span class="${badge}"><span class="size-2.5 rounded-full bg-destructive"></span>Sold out</span></div>`,
+        },
+        {
+          name: 'Sticker badge',
+          category: 'Status',
+          html: `<div class="flex flex-wrap items-center justify-center gap-5"><span class="${sticker} -rotate-3 bg-martabak text-martabak-foreground ring-martabak-edge">Best seller</span><span class="${sticker} rotate-2 bg-pandan text-pandan-foreground ring-pandan-edge">New</span><span class="${sticker} -rotate-2 bg-primary text-primary-foreground ring-primary-edge">Save 20%</span></div>`,
+        },
+        {
+          name: 'Progress',
+          category: 'Status',
+          html: `<div class="w-full max-w-60"><div class="flex justify-between type-ui"><span>Packing your order</span><span class="text-muted-foreground tabular-nums">2 of 3</span></div><div role="progressbar" aria-label="Order progress" aria-valuenow="2" aria-valuemin="0" aria-valuemax="3" aria-valuetext="Packing, step 2 of 3" class="mt-2 h-4 overflow-hidden rounded-xs border-2 border-border bg-muted"><div class="h-full w-2/3 rounded-r-[4px] bg-primary"></div></div></div>`,
+        },
+        {
+          name: 'Rating',
+          category: 'Inputs',
+          stateful: true,
+          html: `<div class="flex flex-col items-center gap-2"><fieldset data-rating class="jajan-rating flex gap-1"><legend class="sr-only">Rate Klepon</legend><label class="${ratingLabel}"><input type="radio" name="rating" value="1" class="sr-only" /><span class="sr-only">1 star</span>${star}</label><label class="${ratingLabel}"><input type="radio" name="rating" value="2" class="sr-only" /><span class="sr-only">2 stars</span>${star}</label><label class="${ratingLabel}"><input type="radio" name="rating" value="3" class="sr-only" /><span class="sr-only">3 stars</span>${star}</label><label class="${ratingLabel}"><input type="radio" name="rating" value="4" checked class="sr-only" /><span class="sr-only">4 stars</span>${star}</label><label class="${ratingLabel}"><input type="radio" name="rating" value="5" class="sr-only" /><span class="sr-only">5 stars</span>${star}</label></fieldset><p class="type-small text-muted-foreground">Klepon, <output>4 of 5</output></p></div>`,
+        },
+        {
+          name: 'Avatar',
+          category: 'Content',
+          html: `<div class="flex flex-col items-center gap-5"><span class="inline-flex size-16 items-center justify-center rounded-lg border-2 border-pandan-edge bg-pandan type-h3 text-pandan-foreground">S</span><div class="flex -space-x-3"><span class="${avatar} border-martabak-edge bg-martabak text-martabak-foreground">D</span><span class="${avatar} border-primary-edge bg-primary text-primary-foreground">R</span><span class="${avatar} border-cendol-edge bg-cendol text-cendol-foreground">A</span><span class="${avatar} border-gula-edge bg-gula text-gula-foreground">W</span><span class="${avatar} border-border bg-muted text-muted-foreground">+3</span></div></div>`,
+        },
+        {
+          name: 'List',
+          category: 'Content',
+          html: `<ul class="w-full max-w-64 divide-y-2 divide-border overflow-hidden rounded-xl border-2 border-border bg-card"><li class="${row}"><span>Klepon <span class="text-muted-foreground">×2</span></span><span>Rp24.000</span></li><li class="${row}"><span>Kue lapis <span class="text-muted-foreground">×1</span></span><span>Rp15.000</span></li><li class="${row}"><span>Es cendol <span class="text-muted-foreground">×1</span></span><span>Rp15.000</span></li></ul>`,
+        },
+        {
+          name: 'Toast',
+          category: 'Status',
+          html: `<div role="status" class="flex w-full max-w-80 items-center gap-3 rounded-xl border-2 border-border bg-card py-3 pr-2 pl-4 ledge-lg-border"><span class="inline-flex size-9 shrink-0 items-center justify-center rounded-sm border-2 border-pandan-edge bg-pandan text-pandan-foreground">${icons.check}</span><p class="flex-1 type-ui">Klepon added to your basket</p><button type="button" class="h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Undo</button></div>`,
+        },
+        {
+          name: 'Empty state',
+          category: 'Content',
+          html: `<div class="flex flex-col items-center text-center">${basketArt}<h3 class="mt-4 type-title">Your basket is empty</h3><p class="mt-1 type-small text-muted-foreground">Snacks you add show up here.</p><button type="button" class="${smallSecondary} mt-4">Browse snacks</button></div>`,
+        },
+        {
+          name: 'Spinner',
+          category: 'Status',
+          html: `<span role="status" aria-label="Loading" class="inline-flex items-end gap-2"><span class="jajan-hop size-4 rounded-full bg-pandan"></span><span class="jajan-hop size-4 rounded-full bg-primary [animation-delay:150ms]"></span><span class="jajan-hop size-4 rounded-full bg-martabak [animation-delay:300ms]"></span></span>`,
+        },
+        {
+          name: 'Icon button',
+          category: 'Actions',
+          html: `<div class="flex items-center gap-5"><button type="button" aria-label="Save Klepon" class="${raised}">${icons.heart}</button><button type="button" aria-label="Notify me" class="${raised}">${icons.bell}</button><button type="button" aria-label="Copy" class="${quiet}">${icons.copy}</button></div>`,
+        },
+        {
+          name: 'Card',
+          category: 'Content',
+          html: `<article class="w-full max-w-64 rounded-3xl border-2 border-border bg-card p-5 ledge-lg-border"><p class="type-caption text-muted-foreground">Pickup</p><h3 class="mt-1 type-title">Today at 16:00</h3><p class="mt-1 type-small text-muted-foreground">Pasar Antri, stall 12. Show your order code at the stall.</p><button type="button" class="${smallSecondary} mt-4">Change time</button></article>`,
+        },
+      ];
+
+      const addedStepper = `<div role="group" aria-label="Quantity of Klepon" data-stepper data-min="0" class="inline-flex h-11 items-center rounded-md border-2 border-primary-edge bg-primary text-primary-foreground ledge-primary-edge"><button type="button" data-step="-1" aria-label="Remove one" class="inline-flex size-10 items-center justify-center rounded-l-sm transition hover:bg-primary-hover">${icons.minus}</button><output class="min-w-6 text-center type-ui tabular-nums">1</output><button type="button" data-step="1" aria-label="Add one" class="inline-flex size-10 items-center justify-center rounded-r-sm transition hover:bg-primary-hover">${icons.plus}</button></div>`;
+
+      const gallery = document.getElementById('gallery');
+      const filters = document.getElementById('filters');
+      const theme = document.getElementById('theme');
+      const rupiah = (value) => `Rp${value.toLocaleString('id-ID')}`;
+      const syncSliders = (root) =>
+        root.querySelectorAll('input[type=range]').forEach((el) => {
+          el.style.setProperty('--slider-fill', `${((el.value - el.min) / (el.max - el.min)) * 100}%`);
+          const output = el.closest('label')?.querySelector('output');
+          if (output) output.textContent = `${el.value}%`;
+        });
+      const paintTheme = () => {
+        theme.innerHTML = document.documentElement.classList.contains('dark') ? icons.sun : icons.moon;
+      };
+
+      paintTheme();
+      filters.innerHTML = ['All', 'Actions', 'Inputs', 'Status', 'Content']
+        .map((name, i) => `<button type="button" aria-pressed="${i === 0}" class="${chip}">${name}</button>`)
+        .join('');
+      gallery.innerHTML = components
+        .map(
+          (c, i) => `<article data-index="${i}" data-category="${c.category}" class="flex aspect-[9/10] flex-col rounded-3xl border-2 border-border bg-card ledge-lg-border">
+            <div data-demo class="flex flex-1 items-center justify-center px-6 pt-6">${c.html}</div>
+            <footer class="flex h-16 items-center justify-between pr-3.5 pb-1 pl-6">
+              <h2 class="type-ui">${c.name}</h2>
+              <div class="flex gap-0.5">
+                ${c.stateful ? `<button type="button" data-reset aria-label="Reset ${c.name}" class="${quiet}">${icons.reset}</button>` : ''}
+                <button type="button" data-copy aria-label="Copy ${c.name} markup" class="${quiet}">${icons.copy}</button>
+              </div>
+            </footer>
+          </article>`,
+        )
+        .join('');
+      syncSliders(gallery);
+
+      theme.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        paintTheme();
+      });
+      new MutationObserver(paintTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+      filters.addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button) return;
+        for (const b of filters.children) b.setAttribute('aria-pressed', b === button);
+        for (const card of gallery.children) {
+          card.hidden = button.textContent !== 'All' && card.dataset.category !== button.textContent;
+        }
+      });
+
+      gallery.addEventListener('input', (event) => {
+        if (event.target.type === 'range') syncSliders(event.target.parentElement);
+        const rating = event.target.closest('[data-rating]');
+        if (rating) rating.parentElement.querySelector('output').textContent = `${event.target.value} of 5`;
+      });
+
+      gallery.addEventListener('click', async (event) => {
+        const card = event.target.closest('article[data-index]');
+        if (!card) return;
+        const component = components[card.dataset.index];
+        const toggle = event.target.closest('[role=switch]');
+        const selected = event.target.closest('[role=tab]');
+        const pressed = event.target.closest('[data-chips] button');
+        const step = event.target.closest('[data-step]');
+        const add = event.target.closest('[data-add]');
+        const copy = event.target.closest('[data-copy]');
+        if (toggle) toggle.setAttribute('aria-checked', toggle.getAttribute('aria-checked') !== 'true');
+        if (selected) for (const t of selected.parentElement.children) t.setAttribute('aria-selected', t === selected);
+        if (pressed) {
+          const group = pressed.parentElement;
+          if (group.dataset.chips === 'single') for (const b of group.children) b.setAttribute('aria-pressed', b === pressed);
+          else pressed.setAttribute('aria-pressed', pressed.getAttribute('aria-pressed') !== 'true');
+        }
+        if (step) {
+          const stepper = step.closest('[data-stepper]');
+          const output = stepper.querySelector('output');
+          const min = Number(stepper.dataset.min ?? 1);
+          const value = Math.min(9, Math.max(min, Number(output.textContent) + Number(step.dataset.step)));
+          if (value === 0 && stepper.dataset.min === '0') {
+            // Back to the add button when the last one is removed.
+            const demo = card.querySelector('[data-demo]');
+            demo.innerHTML = component.html;
+          } else {
+            output.textContent = value;
+            stepper.querySelector('[data-step="-1"]').disabled = value <= min && stepper.dataset.min !== '0';
+            stepper.querySelector('[data-step="1"]').disabled = value >= 9;
+            const total = card.querySelector('[data-total]');
+            if (total) total.textContent = rupiah(value * Number(stepper.dataset.price));
+          }
+        }
+        if (add) {
+          add.insertAdjacentHTML('afterend', addedStepper);
+          add.remove();
+        }
+        if (event.target.closest('[data-reset]')) {
+          const demo = card.querySelector('[data-demo]');
+          demo.innerHTML = component.html;
+          syncSliders(demo);
+        }
+        if (copy) {
+          try {
+            await navigator.clipboard.writeText(component.html);
+            copy.innerHTML = icons.check;
+            setTimeout(() => (copy.innerHTML = icons.copy), 1200);
+          } catch {
+            // No clipboard over file://; the button stays as it is.
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

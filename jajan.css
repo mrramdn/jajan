@@ -1,0 +1,462 @@
+/*
+ * Jajan: a playful theme for Tailwind CSS v4. Coconut-cream ground, white cards
+ * with a hard ledge, raspberry buttons and the colors of jajan pasar.
+ *
+ *   @import "tailwindcss";
+ *   @import "./jajan.css";
+ *
+ * Token names follow shadcn/ui, so shadcn components pick the theme up as is.
+ * The rules behind the values are in DESIGN.md.
+ */
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #f8eedb;
+  --foreground: #3b2314;
+  --card: #ffffff;
+  --card-foreground: #3b2314;
+  --popover: #ffffff;
+  --popover-foreground: #3b2314;
+  --primary: #d6336c;
+  --primary-hover: #c22a60;
+  --primary-edge: #9e1f4d;
+  --primary-foreground: #ffffff;
+  --secondary: #fcdce7;
+  --secondary-foreground: #9e1f4d;
+  --secondary-edge: #f6b4c9;
+  --muted: #f1e3c9;
+  --muted-foreground: #7a5b45;
+  --accent: #f1e3c9;
+  --accent-foreground: #3b2314;
+  --destructive: #c9351b;
+  --destructive-foreground: #ffffff;
+  --destructive-edge: #962510;
+  --success: #48a85c;
+  --success-foreground: #3b2314;
+  --warning: #f2b134;
+  --warning-foreground: #3b2314;
+  --pandan: #48a85c;
+  --pandan-foreground: #3b2314;
+  --pandan-edge: #2b7f47;
+  --martabak: #f2b134;
+  --martabak-foreground: #3b2314;
+  --martabak-edge: #c98a12;
+  --gula: #8a562a;
+  --gula-foreground: #ffffff;
+  --gula-edge: #5e3818;
+  --cendol: #7fd3b8;
+  --cendol-foreground: #3b2314;
+  --cendol-edge: #3fa487;
+  --border: #e8d8be;
+  --input: #9b7b5c;
+  --ring: #d6336c;
+  --radius: 1rem;
+  --shadow-xs: 0 4px 0 0 var(--input);
+  --shadow-sm: 0 6px 0 0 var(--border);
+  --shadow-lg: 0 10px 0 0 var(--border);
+}
+
+.dark {
+  --background: #2a1911;
+  --foreground: #fbf0df;
+  --card: #3b2314;
+  --card-foreground: #fbf0df;
+  --popover: #3b2314;
+  --popover-foreground: #fbf0df;
+  --primary: #d6336c;
+  --primary-hover: #c22a60;
+  --primary-edge: #9e1f4d;
+  --primary-foreground: #ffffff;
+  --secondary: #55263a;
+  --secondary-foreground: #f6b4c9;
+  --secondary-edge: #7e3656;
+  --muted: #4a3425;
+  --muted-foreground: #cdb49c;
+  --accent: #4a3425;
+  --accent-foreground: #fbf0df;
+  --destructive: #d43b1f;
+  --destructive-foreground: #ffffff;
+  --destructive-edge: #962510;
+  --success: #5dbe6e;
+  --success-foreground: #2a1911;
+  --warning: #f5bd4a;
+  --warning-foreground: #2a1911;
+  --pandan: #5dbe6e;
+  --pandan-foreground: #2a1911;
+  --pandan-edge: #2b7f47;
+  --martabak: #f5bd4a;
+  --martabak-foreground: #2a1911;
+  --martabak-edge: #c98a12;
+  --gula: #bd834d;
+  --gula-foreground: #2a1911;
+  --gula-edge: #8a562a;
+  --cendol: #7fd3b8;
+  --cendol-foreground: #2a1911;
+  --cendol-edge: #3fa487;
+  --border: #563d2b;
+  --input: #8e7258;
+  --ring: #f06292;
+  --shadow-xs: 0 4px 0 0 var(--input);
+  --shadow-sm: 0 6px 0 0 var(--border);
+  --shadow-lg: 0 10px 0 0 var(--border);
+}
+
+@theme {
+  /* The default Tailwind palette is removed on purpose: the colors of jajan pasar only. */
+  --color-*: initial;
+  --color-white: #ffffff;
+
+  /* Coconut cream and palm sugar: the warm neutrals. */
+  --color-cream-50: #fbf0df;
+  --color-cream-100: #f8eedb;
+  --color-cream-200: #f1e3c9;
+  --color-cream-300: #e8d8be;
+  --color-cream-400: #cdb49c;
+  --color-cream-500: #9b7b5c;
+  --color-cream-600: #8e7258;
+  --color-cream-700: #7a5b45;
+  --color-cocoa-500: #563d2b;
+  --color-cocoa-600: #4a3425;
+  --color-cocoa-700: #3b2314;
+  --color-cocoa-800: #2a1911;
+
+  /* Kue lapis: the raspberry pink of the layered cake. */
+  --color-raspberry-100: #fcdce7;
+  --color-raspberry-200: #f6b4c9;
+  --color-raspberry-400: #f06292;
+  --color-raspberry-500: #d6336c;
+  --color-raspberry-600: #c22a60;
+  --color-raspberry-700: #9e1f4d;
+  --color-raspberry-800: #7e3656;
+  --color-raspberry-900: #55263a;
+
+  /* Klepon and dadar gulung: pandan green. */
+  --color-pandan-300: #5dbe6e;
+  --color-pandan-400: #48a85c;
+  --color-pandan-600: #2b7f47;
+
+  /* Martabak manis: golden yellow. */
+  --color-martabak-300: #f5bd4a;
+  --color-martabak-400: #f2b134;
+  --color-martabak-600: #c98a12;
+
+  /* Gula aren: palm sugar. */
+  --color-gula-300: #bd834d;
+  --color-gula-500: #8a562a;
+  --color-gula-700: #5e3818;
+
+  /* Es cendol: mint. */
+  --color-cendol-300: #7fd3b8;
+  --color-cendol-500: #3fa487;
+
+  /* Sambal: the one red, kept apart from the raspberry. */
+  --color-chili-400: #d43b1f;
+  --color-chili-500: #c9351b;
+  --color-chili-700: #962510;
+
+  /* Plus Jakarta Sans has to be loaded by the app (next/font, @fontsource-variable/plus-jakarta-sans or a link tag). */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --default-transition-duration: 120ms;
+  --default-transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  /* A small overshoot for thumbs and stickers. */
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-edge: var(--primary-edge);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary-edge: var(--secondary-edge);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-edge: var(--destructive-edge);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-pandan: var(--pandan);
+  --color-pandan-foreground: var(--pandan-foreground);
+  --color-pandan-edge: var(--pandan-edge);
+  --color-martabak: var(--martabak);
+  --color-martabak-foreground: var(--martabak-foreground);
+  --color-martabak-edge: var(--martabak-edge);
+  --color-gula: var(--gula);
+  --color-gula-foreground: var(--gula-foreground);
+  --color-gula-edge: var(--gula-edge);
+  --color-cendol: var(--cendol);
+  --color-cendol-foreground: var(--cendol-foreground);
+  --color-cendol-edge: var(--cendol-edge);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Chunky rounded rectangles, never pills: controls 16px, chips 14px, panels 20px, cards 28px. */
+  --radius-xs: calc(var(--radius) - 8px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 20px);
+
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-lg: var(--shadow-lg);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--secondary);
+    color: var(--secondary-foreground);
+  }
+
+  /* The ledges still press, but nothing slides or bounces. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}
+
+/*
+ * Type styles. Each one sets size, line height, tracking and weight together.
+ * They are named type-* instead of text-* so tailwind-merge never mistakes
+ * them for a text color.
+ */
+@utility type-display {
+  font-size: 3.5rem;
+  line-height: 3.75rem;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+@utility type-h1 {
+  font-size: 2.5rem;
+  line-height: 2.75rem;
+  letter-spacing: -0.025em;
+  font-weight: 800;
+}
+
+@utility type-h2 {
+  font-size: 2rem;
+  line-height: 2.25rem;
+  letter-spacing: -0.02em;
+  font-weight: 800;
+}
+
+@utility type-h3 {
+  font-size: 1.5rem;
+  line-height: 1.875rem;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+
+@utility type-title {
+  font-size: 1.25rem;
+  line-height: 1.625rem;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+@utility type-body {
+  font-size: 1.0625rem;
+  line-height: 1.625rem;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+/* The workhorse for interface text: chips, labels, list rows, card titles. */
+@utility type-ui {
+  font-size: 0.9375rem;
+  line-height: 1.25rem;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+@utility type-small {
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+
+@utility type-caption {
+  font-size: 0.8125rem;
+  line-height: 1rem;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+/* Prices in rupiah: heavy, with figures that line up. */
+@utility type-price {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.01em;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * The ledge: a hard bottom shadow in a darker shade of the fill. ledge-<color>
+ * is 4px for controls, ledge-lg-<color> 6px for cards and panels, ledge-sm-<color>
+ * 2px for small raised parts such as a selected segment or a slider thumb.
+ * Press with active:translate-y-1 active:shadow-none.
+ */
+@utility ledge-* {
+  box-shadow: 0 4px 0 0 --value(--color-*);
+}
+
+@utility ledge-lg-* {
+  box-shadow: 0 6px 0 0 --value(--color-*);
+}
+
+@utility ledge-sm-* {
+  box-shadow: 0 2px 0 0 --value(--color-*);
+}
+
+/* Checkbox and radio marks, drawn in the control's own color. */
+@utility jajan-check {
+  &:checked {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+    background-size: 1rem 1rem;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+@utility jajan-radio {
+  &:checked {
+    background-image: radial-gradient(circle, #ffffff 0 4px, transparent 4.5px);
+  }
+}
+
+/*
+ * Rating: five radios in a fieldset, each wrapped in a label with a star.
+ * Stars up to the checked one are filled in martabak yellow.
+ */
+@utility jajan-rating {
+  label:has(input:checked) svg,
+  label:has(~ label input:checked) svg {
+    fill: var(--martabak);
+    color: var(--martabak-edge);
+  }
+}
+
+/*
+ * Native range input. Chrome and Safari cannot paint the filled part on their
+ * own, so set --slider-fill to the value in percent whenever the input changes.
+ */
+@utility jajan-slider {
+  appearance: none;
+  width: 100%;
+  height: 2rem;
+  background: transparent;
+  cursor: pointer;
+
+  &::-webkit-slider-runnable-track {
+    height: 0.75rem;
+    border-radius: 0.375rem;
+    border: 2px solid var(--border);
+    background: linear-gradient(
+      to right,
+      var(--primary) var(--slider-fill, 50%),
+      var(--muted) var(--slider-fill, 50%)
+    );
+  }
+
+  &::-moz-range-track {
+    height: 0.75rem;
+    border-radius: 0.375rem;
+    border: 2px solid var(--border);
+    background: var(--muted);
+  }
+
+  &::-moz-range-progress {
+    height: 0.75rem;
+    border-radius: 0.375rem;
+    background: var(--primary);
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: -0.625rem;
+    border-radius: 0.625rem;
+    border: 2px solid var(--primary-edge);
+    background: var(--card);
+    box-shadow: 0 2px 0 0 var(--primary-edge);
+  }
+
+  &::-moz-range-thumb {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.625rem;
+    border: 2px solid var(--primary-edge);
+    background: var(--card);
+    box-shadow: 0 3px 0 0 var(--primary-edge);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+/* Three dots that take turns hopping: the loading indicator. */
+@utility jajan-hop {
+  animation: jajan-hop 900ms var(--ease-bounce) infinite;
+}
+
+@keyframes jajan-hop {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-0.5rem);
+  }
+}

@@ -1,0 +1,4 @@
+@import "tailwindcss" source(none);
+@import "../jajan.css";
+/* Only the gallery is scanned, so prose in DESIGN.md or the README never adds CSS. */
+@source "./index.html";
