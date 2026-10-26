@@ -280,6 +280,8 @@ components:
 
 ## Overview
 
+Jajan is by Rifki Ramdani (https://uiux.mrramdn.com/en/systems/jajan). This file is licensed under CC BY 4.0: copy and adapt it, with credit. The CSS and HTML are MIT.
+
 Jajan is a playful system for consumer apps: food ordering, pets, learning, kids, local communities. "Jajan" is Indonesian for buying snacks at a street stall or a market, and the whole look comes from jajan pasar, the traditional market snacks. The page is coconut cream, content sits on white cards with a 28px radius, text is deep palm-sugar brown, and the one main action is the raspberry pink of kue lapis. Pandan green, martabak yellow, palm-sugar brown and cendol mint color the categories, avatars, stickers and illustrations.
 
 Every raised thing is a chunky rounded rectangle with a 2px border and a solid ledge, a hard bottom shadow in a darker shade of its own fill, like a piece of candy. Pressing a control sinks it onto its ledge. Targets are big: 52px controls, 40px chips, 44px icon buttons. Plus Jakarta Sans, heavy for headings, carries the text; the friendliness comes from the shapes around it, not from a novelty face.
@@ -338,7 +340,7 @@ Use semantic tokens only. The default Tailwind palette is removed in `jajan.css`
 | `input` | `#9B7B5C` | `#8E7258` | Border and ledge of white controls: fields, chips, steppers, the off toggle |
 | `ring` | `#D6336C` | `#F06292` | Focus ring |
 
-`--radius` is `1rem`. Dark mode is the `.dark` class on a parent element.
+`--radius` is `1rem`. Dark mode is the `.dark` class on a parent element. The .dark block also sets color-scheme: dark, so native controls and scrollbars follow the theme.
 
 Rules:
 
@@ -670,3 +672,4 @@ Every interactive element gets the global focus ring from `jajan.css`: a 3px `ri
 - Don't put raspberry or red text on dark surfaces; text actions are `secondary-foreground`, error messages are `foreground` with a red icon.
 - Don't use the default Tailwind palette, hard-coded hex values, gradients or emoji.
 - Don't shrink interface text below 13px or text inputs below 16px.
+- Don't put an icon, a logo mark or an initials badge beside the wordmark or a headline: both are text only.

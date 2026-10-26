@@ -3,6 +3,28 @@
 Jajan uses semantic versions. While it is in beta, a minor version adds or changes tokens, components or rules,
 and a patch fixes them. Every version is a git tag (`v0.1.0`) and an entry in the design site's record.
 
+## 0.2.3 (2026-10-26)
+
+A licence, a release check and three small fixes. The theme's tokens do not change.
+
+- Jajan has a licence. `LICENSE` puts `jajan.css` and everything in `preview/` under MIT, and `DESIGN.md` and the
+  Figma library under CC BY 4.0, so both can be copied and adapted with credit. `package.json` says
+  `MIT AND CC-BY-4.0`, line 1 of `jajan.css` and `preview/input.css` carries a `/*!` banner with the name,
+  version, copyright and link, and `DESIGN.md` opens its Overview with the same note. `pnpm build` moves the banner
+  above Tailwind's own, so it is also line 1 of `preview/preview.css`.
+- `:root` sets `color-scheme: light` and `.dark` sets `color-scheme: dark`, so scrollbars and native controls
+  follow the theme instead of staying light in dark mode.
+- `:root` names the release it came from in `--jajan-build`. It is not a design token and nothing reads it; it
+  shows where a copied file came from.
+- The release steps in the README name every place the version is written, and `pnpm check` fails while any of
+  them disagree with `package.json`.
+- At 320px wide the gallery no longer scrolls sideways: a product card took its width from its stretched height
+  through `aspect-ratio` and grew past its column. Cards now fill their column's width; their heights do not
+  change.
+- The example screen's delivery address has no house number any more: "Jl. Sukajadi, Bandung".
+- The example screen's heading is the stall's name alone, without the BR badge beside it, and
+  `DESIGN.md`'s Do's and Don'ts say the wordmark and headlines carry no icon, logo mark or initials badge.
+
 ## 0.2.2 (2026-10-24)
 
 For screen readers; nothing looks different.

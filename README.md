@@ -13,6 +13,8 @@ A playful design system for consumer apps: food ordering, pets, learning, kids, 
 | `preview/index.html` | Component gallery built with the theme: every component with neutral content, its variants and its states. Cards are grouped under category headings. Has a dark mode switch and copy and reset buttons per component. |
 | `preview/demo.html` | An example screen built only from the recipes: the order page of a snack stall, with a menu, a cart and a rating. Light and dark follow the `dark` class. |
 | `CHANGELOG.md` | What changed in each version. |
+| `scripts/` | `check-version.mjs` (`pnpm check`: every place that names the version agrees) and `banner-first.mjs` (run by `pnpm build`: the theme's `/*!` banner stays line 1 of `preview/preview.css`). |
+| `LICENSE` | MIT for `jajan.css` and everything in `preview/`; CC BY 4.0 for `DESIGN.md` and the Figma library. |
 
 Figma: [Jajan Design System](https://www.figma.com/design/hL69pjHba5YSr9C127KJT7) (pages Cover, Foundations, Components and Example; Example holds the demo screen in light and dark).
 
@@ -45,11 +47,22 @@ Then open `preview/index.html` (the gallery) or `preview/demo.html` (the example
 
 The version is in `package.json`, `CHANGELOG.md` says what changed, and every release is a git tag. To release:
 
-1. Change the files and run `pnpm build`, so `preview/preview.css` matches the gallery.
-2. Raise `version` in `package.json` and add an entry to `CHANGELOG.md`.
-3. Commit, tag `v<version>` (`git tag -a v0.2.0 -m "Jajan 0.2.0"`) and push with `git push --follow-tags`.
-4. On the design site, sync this folder and add the version to Jajan's record. The site's tests fail while the
-   record states a different version from the synced files.
+1. Change the files and run `pnpm build`, so `preview/preview.css` matches.
+2. Raise the version everywhere it is written: `version` in `package.json`, a new entry at the top of `CHANGELOG.md`,
+   the `/*!` banner on line 1 of `jajan.css` and `preview/input.css`, and `--jajan-build` in `jajan.css`'s `:root`.
+   Run `pnpm build` again and `pnpm check`, which fails while any of them differ.
+3. Commit, tag `v<version>` (`git tag -a v0.3.0 -m "Jajan 0.3.0"`) and push with `git push --follow-tags`, then
+   publish a GitHub Release from the tag with the CHANGELOG entry.
+4. On the design site, run `pnpm sync:system jajan <this folder>`, put the pictures in
+   `public/images/jajan/<version>/`, and add the version to the record. The site's tests fail while the record, the
+   synced files or a version the gallery names disagree.
+5. Optionally, after the site deploys, save a Wayback snapshot of the product page in both languages.
+
+## Licence
+
+The code is MIT: `jajan.css` and everything in `preview/` (HTML and CSS). `DESIGN.md` and the Figma library "Jajan
+Design System" are CC BY 4.0: copy and adapt them, also commercially, with credit: "Jajan by Rifki Ramdani,
+https://uiux.mrramdn.com/en/systems/jajan". The full text is in [`LICENSE`](LICENSE).
 
 ## Where the look comes from
 

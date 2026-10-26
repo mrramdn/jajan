@@ -14,7 +14,6 @@
     <div class="mx-auto max-w-7xl px-4 pt-6 pb-12 sm:px-6">
       <header class="flex flex-wrap items-center gap-x-6 gap-y-5">
         <div class="flex min-w-0 flex-1 basis-80 items-center gap-4">
-          <span class="hidden size-16 shrink-0 items-center justify-center rounded-lg border-2 border-gula-edge bg-gula type-h3 min-[480px]:inline-flex text-gula-foreground" aria-hidden="true">BR</span>
           <div class="min-w-0">
             <p class="type-caption text-muted-foreground">Pasar Kosambi, Bandung</p>
             <h1 class="mt-0.5 type-h2">Jajan Bu Ratna</h1>
@@ -74,7 +73,7 @@
             <div class="mt-4 flex items-start justify-between gap-3">
               <div>
                 <p id="where-label" class="type-caption text-muted-foreground">Deliver to</p>
-                <p id="where" class="mt-1 type-ui">Jl. Sukajadi 41, Bandung</p>
+                <p id="where" class="mt-1 type-ui">Jl. Sukajadi, Bandung</p>
                 <p id="when" class="mt-0.5 type-small text-muted-foreground">Arrives in 30 to 45 min</p>
               </div>
               <button id="change" type="button" class="-mr-1 h-10 shrink-0 rounded-md px-3 type-ui text-secondary-foreground transition hover:bg-accent">Change</button>
@@ -310,7 +309,7 @@
         mode = tab.dataset.mode;
         const delivery = mode === 'delivery';
         $('where-label').textContent = delivery ? 'Deliver to' : 'Pick up at';
-        $('where').textContent = delivery ? 'Jl. Sukajadi 41, Bandung' : 'Pasar Kosambi, stall 12';
+        $('where').textContent = delivery ? 'Jl. Sukajadi, Bandung' : 'Pasar Kosambi, stall 12';
         $('when').textContent = delivery ? 'Arrives in 30 to 45 min' : 'Ready in about 15 min';
         $('change').hidden = !delivery;
         renderOrder();

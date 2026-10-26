@@ -1,3 +1,4 @@
+/*! Jajan 0.2.3 · © 2026 Rifki Ramdani · MIT · https://uiux.mrramdn.com/en/systems/jajan */
 /*
  * Jajan: a playful theme for Tailwind CSS v4. Coconut-cream ground, white cards
  * with a hard ledge, raspberry buttons and the colors of jajan pasar.
@@ -12,6 +13,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  /* The release this file came from. Not a design token: nothing reads it. */
+  --jajan-build: "jajan 0.2.3 · uiux.mrramdn.com";
   --background: #f8eedb;
   --foreground: #3b2314;
   --card: #ffffff;
@@ -55,6 +58,7 @@
   --shadow-xs: 0 4px 0 0 var(--input);
   --shadow-sm: 0 6px 0 0 var(--border);
   --shadow-lg: 0 10px 0 0 var(--border);
+  color-scheme: light;
 }
 
 .dark {
@@ -100,6 +104,7 @@
   --shadow-xs: 0 4px 0 0 var(--input);
   --shadow-sm: 0 6px 0 0 var(--border);
   --shadow-lg: 0 10px 0 0 var(--border);
+  color-scheme: dark;
 }
 
 @theme {
